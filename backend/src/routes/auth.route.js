@@ -15,9 +15,7 @@ Defines endpoints that utilize the
 authentication controller to handle requests. 
 */
 router.post("/signup", signup);
-
 router.post("/login", login);
-
 router.post("/logout", logout);
 
 
