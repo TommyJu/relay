@@ -9,7 +9,7 @@ Handles the requests and business logic for the
 user authentication endpoints.
 */ 
 
-
+// Handles a user signup POST request
 export const signup = async (req, res) => {
     const { fullName, email, password } = req.body;
     try {
@@ -65,10 +65,51 @@ export const signup = async (req, res) => {
     }
 };
 
-export const login = (req, res) => {
-    res.send("login route");
+
+// Handles a user login POST request
+export const login = async (req, res) => {
+    const { fullName, email, password } = req.body;
+    
+    try {
+        // Verifies that a user with the given email exists.
+        const user = await User.findOne({ email })
+        if (!user) {
+            return res.status(400).json({ message: "Invalid credentials." });
+        }
+
+        // Checks if the given password is correct.
+        const isPasswordCorrect = await bcrypt.compare(password, user.password);
+        if (!isPasswordCorrect) {
+            return res.status(400).json({ message: "Invalid credentials." });
+        }
+
+        // Generates a JWT token for the user on successful login.
+        generateToken(user._id, res);
+
+        // Indicates a successful login.
+        res.status(200).json(
+            {
+                _id: user._id,
+                fullName: user.fullName,
+                email: user.email,
+                profilePic: user.profilePic
+            }
+        );
+    
+    } catch (error) {
+        console.error("Error in login controller", error.message);
+        res.status(500).json({ message: "Internal server error." });
+    }    
 };
 
+
+// Handles a user logout POST request
 export const logout = (req, res) => {
-    res.send("logout route");
+    try {
+        res.cookie("jwt", "", { maxAge:0 });
+        res.status(200).json({ message: "Logged out successfully." });
+    } catch (error) {
+        console.error("Error in logout controller", error.message);
+        res.status(500).json({ message: "Internal server error." });
+    }
 };
