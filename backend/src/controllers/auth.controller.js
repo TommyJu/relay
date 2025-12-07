@@ -103,9 +103,10 @@ export const login = async (req, res) => {
 };
 
 
-// Handles a user logout POST request
+// Handles a user logout POST request.
 export const logout = (req, res) => {
     try {
+        // Expires the user's JWT token to log them out.
         res.cookie("jwt", "", { maxAge:0 });
         res.status(200).json({ message: "Logged out successfully." });
     } catch (error) {
@@ -113,3 +114,13 @@ export const logout = (req, res) => {
         res.status(500).json({ message: "Internal server error." });
     }
 };
+
+
+// Handles a user update profile information PUT request.
+export const updateProfile = async (req, res) => {
+    try {
+        
+    } catch (error) {
+        
+    }
+}
