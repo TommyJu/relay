@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 
+export const MIN_PASSWORD_LENGTH = 6;
+
 const userSchema = new mongoose.Schema(
     {
         email: {
@@ -14,7 +16,7 @@ const userSchema = new mongoose.Schema(
         password: {
             type: String,
             required: true,
-            minlength: 6
+            minlength: MIN_PASSWORD_LENGTH
         },
         profilePic: {
             type: String,

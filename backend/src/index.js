@@ -1,15 +1,15 @@
 import express from "express";
-import authRoutes from "./routes/auth.route.js"
-import { connectDB } from "./lib/db.js"
-import dotenv from "dotenv"
+import authRoutes from "./routes/auth.route.js";
+import { connectDB } from "./lib/db.js";
+import dotenv from "dotenv";
 
 dotenv.config();
 
 /* 
-Sets up the application to use the express middleware
-for the API endpoints.
+Sets up the Express application
 */
 const app = express();
+app.use(express.json());
 app.use("/api/auth", authRoutes);
 
 // Starts the server using an environment variable for the port number.
