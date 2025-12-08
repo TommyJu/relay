@@ -1,7 +1,8 @@
 import { MIN_PASSWORD_LENGTH } from "../models/user.model.js";
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
-import { generateToken } from "../lib/utils.js" 
+import { generateToken } from "../lib/utils.js";
+import cloudinary from "../lib/cloudinary.js";
 
 
 /*
@@ -119,8 +120,29 @@ export const logout = (req, res) => {
 // Handles a user update profile information PUT request.
 export const updateProfile = async (req, res) => {
     try {
+        // Retrieves user details.
+        const { profilePic } = req.body;
+        const userId = req.user._id;
+
+        // Ensures that the user has a profile picture.
+        if (!profilePic) {
+            return res.status(400).json({ message: "Profile picture is required." });
+        }
+
+        // Uploads the new profile picture to cloudinary
+        const uploadResponse = await cloudinary.uploader.upload(profilePic);
         
+        // Updates the user's profile picture URL in the database
+        const updatedUser = await User.findByIdAndUpdate(
+            userId, 
+            { profilePic: uploadResponse.secure_url },
+            { new: true }
+        );
+
+        res.status(200).json(updatedUser);
+
     } catch (error) {
-        
+        console.error("Error in update profile controller.", error.message);
+        res.status(500).json({ message: "Internal server error." });
     }
 }
