@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
 
-// Verifies the JWT, loads the user, and passes control to the next middleware.
+// Verifies the JWT, loads the user into the request body, and passes control to the next middleware.
 export const protectRoute = async (req, res, next) => {
     try {
         // Retrieves the token from the client.
@@ -18,7 +18,7 @@ export const protectRoute = async (req, res, next) => {
             return res.status(401).json({ message: "Unauthorized, invalid token." });
         };
 
-        const user = await User.findById(decoded.userId).select("-password");
+        const user = await User.findById(decodedToken.userId).select("-password");
 
         // Verifies that the user exists.
         if (!user) {

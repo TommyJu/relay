@@ -2,7 +2,9 @@ import express from "express";
 import { 
     signup,
     login,
-    logout 
+    logout,
+    checkAuth,
+    updateProfile
 } from "../controllers/auth.controller.js";
 import { protectRoute } from "../middleware/auth.middleware.js"
 
@@ -23,5 +25,8 @@ router.post("/logout", logout);
 
 // Defines an endpoint for editing profile information.
 router.put("/update-profile", protectRoute, updateProfile);
+
+// Defines and endpoint for checking user authentication.
+router.get("/check-auth", protectRoute, checkAuth);
 
 export default router;
