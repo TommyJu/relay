@@ -61,7 +61,7 @@ export const signup = async (req, res) => {
         }
 
     } catch (error) {
-        console.error("Error in signup controller", error.message);
+        console.error("Error in authentication controller signup function.", error.message);
         res.status(500).json({ message: "Internal server error." });
     }
 };
@@ -98,7 +98,7 @@ export const login = async (req, res) => {
         );
     
     } catch (error) {
-        console.error("Error in login controller", error.message);
+        console.error("Error in authentication controller login function.", error.message);
         res.status(500).json({ message: "Internal server error." });
     }    
 };
@@ -111,7 +111,7 @@ export const logout = (req, res) => {
         res.cookie("jwt", "", { maxAge:0 });
         res.status(200).json({ message: "Logged out successfully." });
     } catch (error) {
-        console.error("Error in logout controller", error.message);
+        console.error("Error in authentication controller logout function.", error.message);
         res.status(500).json({ message: "Internal server error." });
     }
 };
@@ -142,7 +142,7 @@ export const updateProfile = async (req, res) => {
         res.status(200).json(updatedUser);
 
     } catch (error) {
-        console.error("Error in update profile controller.", error.message);
+        console.error("Error in authentication controller update profile function.", error.message);
         res.status(500).json({ message: "Internal server error." });
     }
 }
@@ -152,7 +152,7 @@ export const checkAuth = (req, res) => {
     try {
         res.status(200).json(req.user);
     } catch (error) {
-                console.error("Error in check authentication controller.", error.message);
+        console.error("Error in authentication controller check authentication function.", error.message);
         res.status(500).json({ message: "Internal server error." });
     }
 };
