@@ -10,13 +10,14 @@ export const useAuthStore = create((set) => ({
     isLoggingIn: false,
     isUpdatingProfile: false,
 
+    // Calls the server endpoint for checking user authentication to update state.
     checkAuth: async () => {
         try {
             const response = await axiosInstance.get("/auth/check-auth");
             set({ authUser: response.data });
         } catch (error) {
             set({ authUser: null });
-            console.error("Error in checkAuth: ", error.message);
+            console.error("Error in checkAuth: ", error);
         } finally {
             set({ isCheckingAuth: false });
         }
