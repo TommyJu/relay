@@ -1,4 +1,7 @@
-import React from "react";
+import { 
+  React,
+  useEffect 
+} from "react";
 import Navbar from "./components/Navbar";
 import {
   Routes,
@@ -9,8 +12,18 @@ import {
  import LoginPage from "./pages/LoginPage";
  import SettingsPage from "./pages/SettingsPage";
  import ProfilePage from "./pages/ProfilePage";
+ import { useAuthStore } from "./store/userAuthStore";
 
 const App = () => {
+
+  // Retrieves the global state and functions for authentication.
+  const { authUser, checkAuth } = useAuthStore();
+
+    useEffect(() => {
+      checkAuth();
+    }, [checkAuth]
+  );
+
   return (
     <div>
       <Navbar/>
