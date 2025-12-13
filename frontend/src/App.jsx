@@ -4,7 +4,8 @@ import {
 } from "react";
 import {
   Routes,
-  Route
+  Route,
+  Navigate
  } from "react-router-dom";
  import { Loader } from "lucide-react";
  import Navbar from "./components/Navbar";
@@ -14,6 +15,7 @@ import {
  import SettingsPage from "./pages/SettingsPage";
  import ProfilePage from "./pages/ProfilePage";
  import { useAuthStore } from "./store/userAuthStore";
+ import { Toaster } from "react-hot-toast";
 
 const App = () => {
 
@@ -46,8 +48,9 @@ const App = () => {
           <Route path="/login" element={ authUser ? <Navigate to="/" /> : <LoginPage/> }/>
           <Route path="/settings" element={ authUser ? <SettingsPage/> : <Navigate to="/login" /> }/>
           <Route path="/profile" element={authUser ? <ProfilePage/> : <Navigate to="/login" /> }/>
-          
       </Routes>
+
+      <Toaster/>
     </div>
   );
 };

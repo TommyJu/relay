@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { axiosInstance } from "../lib/axios";
+import toast from "react-hot-toast";
 
 
 // Defines global state and functions for user authentication.
@@ -10,7 +11,6 @@ export const useAuthStore = create((set) => ({
     isLoggingIn: false,
     isUpdatingProfile: false,
 
-    // Calls the server endpoint for checking user authentication to update state.
     checkAuth: async () => {
         try {
             const response = await axiosInstance.get("/auth/check-auth");
@@ -22,4 +22,18 @@ export const useAuthStore = create((set) => ({
             set({ isCheckingAuth: false });
         }
     },
+
+    signup: async (data) => {
+        set({ isSigningUp: true });    
+    
+        try {
+            const response = await axiosInstance.post("/auth/signup", data);
+            set({ authUser: response.data });
+            toast.success("Account created successfully");
+        } catch (error) {
+            toast.error(error.response.data.message);
+        } finally {
+            set({ isSigningUp: false }); 
+        }
+    }
 }));
