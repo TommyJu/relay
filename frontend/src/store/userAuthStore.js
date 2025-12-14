@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 
 
 // Defines global state and functions for user authentication.
-export const useAuthStore = create((set) => ({
+export const userAuthStore = create((set) => ({
     authUser: null,
     isCheckingAuth: true,
     isSigningUp: false,
