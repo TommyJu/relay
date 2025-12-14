@@ -1,4 +1,4 @@
-import { React, useEffect } from "react";
+import { useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { Loader } from "lucide-react";
 import Navbar from "./components/Navbar";
@@ -9,6 +9,7 @@ import SettingsPage from "./pages/SettingsPage";
 import ProfilePage from "./pages/ProfilePage";
 import { useAuthStore } from "./store/userAuthStore";
 import { Toaster } from "react-hot-toast";
+
 
 const App = () => {
   const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
