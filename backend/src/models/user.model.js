@@ -1,9 +1,8 @@
 import mongoose from "mongoose";
 
+
 export const MIN_PASSWORD_LENGTH = 6;
 
-
-// Defines the schema for users.
 const userSchema = new mongoose.Schema(
     {
         email: {

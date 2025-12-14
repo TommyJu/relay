@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 
 
-// Defines the schema for chat messages.
 const messageSchema = new mongoose.Schema(
   {
     senderId: {

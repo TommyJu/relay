@@ -2,7 +2,7 @@ import User from "../models/user.model.js"
 import Message from "../models/message.model.js";
 import cloudinary from "../lib/cloudinary.js";
 
-// Retrieves all users except for the user that is currently logged in.
+
 export const getUsersForSidebar = async (req, res) => {
     try {
         const loggedInUserId = req.user._id;
@@ -16,7 +16,6 @@ export const getUsersForSidebar = async (req, res) => {
 };
 
 
-// Gets messages between the current user and message recipient.
 export const getMessages = async (req, res) => {
     try {
         const { recipientId } = req.params;
@@ -45,22 +44,19 @@ export const getMessages = async (req, res) => {
 };
 
 
-// Sends a message to another user by creating a new message in the database.
 export const sendMessage = async (req, res) => {
     try {
-        // Retrieves data from the request
         const { text, image } = req.body;
-        const {recipientId} = req.params;
+        const { recipientId } = req.params;
         const currentUserId = req.user._id;
 
-        // Uploads an optional image to Cloudinary.
+        // Image uploads are optional
         let imageUrl = "";
         if (image) {
             const uploadResponse = await cloudinary.uploader.upload(image);
             imageUrl = uploadResponse.secure_url;
         }
 
-        // Creates a new message to be sent.
         const newMessage = new Message({
             currentUserId,
             recipientId,
