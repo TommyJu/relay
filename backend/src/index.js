@@ -14,17 +14,16 @@ const app = express();
 
 // The payload type must be defined before exposing endpoints
 app.use(express.json());
-app.use("/api/auth", authRoutes);
-app.use("/api/users", messageRoutes);
-
-app.use(cookieParser());
-
 app.use(cors(
     {
        origin: "http://localhost:5173",
        credentials: true 
     }
 ));
+app.use(cookieParser());
+app.use("/api/auth", authRoutes);
+app.use("/api/users", messageRoutes);
+
 
 
 const PORT = process.env.PORT;
