@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { userAuthStore } from "../store/userAuthStore";
+import { useAuthStore } from "../store/useAuthStore";
 import AuthImagePattern from "../components/AuthImagePattern";
 import toast from "react-hot-toast";
 import {
@@ -23,7 +23,7 @@ const SignUpPage = () => {
   });
 
   // Auth store
-  const { signup, isSigningUp } = userAuthStore();
+  const { signup, isSigningUp } = useAuthStore();
 
   // Form validation
   const validateSignupForm = () => {

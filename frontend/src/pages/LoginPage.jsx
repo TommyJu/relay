@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { userAuthStore } from "../store/userAuthStore";
+import { useAuthStore } from "../store/useAuthStore";
 import AuthImagePattern from "../components/AuthImagePattern";
 import { Link } from "react-router-dom";
 import { Eye, EyeOff, Loader2, Lock, Mail, MessageSquare } from "lucide-react";
 
 const LoginPage = () => {
-  const { login, isLoggingIn } = userAuthStore();
+  const { login, isLoggingIn } = useAuthStore();
 
   const [isPasswordShown, setIsPasswordShown] = useState(false);
 
