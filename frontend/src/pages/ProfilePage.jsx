@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
 import { Camera, Mail, User } from "lucide-react";
+import toast from "react-hot-toast";
 
 
 const ProfilePage = () => {
@@ -10,7 +11,10 @@ const ProfilePage = () => {
   
   const handleImageUpload = (e) => {
     const uploadedFile = e.target.files[0];
-    if (!uploadedFile) return;
+    if (!uploadedFile || !uploadedFile.type.startsWith("image/")) {
+      toast.error("Please select an image file");
+      return;
+    };
 
     const fileReader = new FileReader();
     fileReader.readAsDataURL(uploadedFile);
