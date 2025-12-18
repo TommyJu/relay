@@ -20,7 +20,7 @@ app.use(cors(
 app.use(cookieParser());
 // Expose the endpoints last to prevent CORS and null payload errors
 app.use("/api/auth", authRoutes);
-app.use("/api/users", messageRoutes);
+app.use("/api/messages", messageRoutes);
 
 
 
