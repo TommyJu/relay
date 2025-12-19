@@ -19,19 +19,19 @@ export const getUsersForSidebar = async (req, res) => {
 
 export const getMessages = async (req, res) => {
     try {
-        const { recipientId } = req.params;
-        const currentUserId = req.user._id;
+        const { receiverId } = req.params;
+        const senderId = req.user._id;
         
         // Retrieves both incoming and outgoing messages.
         const messages = await Message.find({ 
             $or: [
                 {
-                    senderId: currentUserId,
-                    receiverId: recipientId
+                    senderId,
+                    receiverId
                 },
                 {
-                    receiverId: recipientId,
-                    senderId: currentUserId
+                    receiverId,
+                    senderId
                 }
             ]
         });
@@ -48,7 +48,7 @@ export const getMessages = async (req, res) => {
 export const sendMessage = async (req, res) => {
     try {
         const { text, image } = req.body;
-        const { recipientId } = req.params;
+        const { receiverId } = req.params;
         const currentUserId = req.user._id;
 
         // Image uploads are optional
@@ -60,15 +60,15 @@ export const sendMessage = async (req, res) => {
 
         const newMessage = new Message({
             senderId: currentUserId,
-            receiverId: recipientId,
+            receiverId: receiverId,
             text,
             image: imageUrl
         });
 
         await newMessage.save();
-        const recipientSocketId = getSocketIdFromUserId(recipientId);
-        if (recipientSocketId) {
-            io.to(recipientSocketId).emit("newMessage", newMessage);
+        const receiverSocketId = getSocketIdFromUserId(receiverId);
+        if (receiverSocketId) {
+            io.to(receiverSocketId).emit("newMessage", newMessage);
         };
         
         res.status(201).json(newMessage);

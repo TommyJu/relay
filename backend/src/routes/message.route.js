@@ -10,7 +10,7 @@ import {
 const router = express.Router();
 
 router.get("/users", protectRoute, getUsersForSidebar);
-router.get("/:recipientId", protectRoute, getMessages);
-router.post("/send/:recipientId", protectRoute, sendMessage);
+router.get("/:receiverId", protectRoute, getMessages);
+router.post("/send/:receiverId", protectRoute, sendMessage);
 
 export default router;
