@@ -59,8 +59,8 @@ export const sendMessage = async (req, res) => {
         }
 
         const newMessage = new Message({
-            currentUserId,
-            recipientId,
+            senderId: currentUserId,
+            receiverId: recipientId,
             text,
             image: imageUrl
         });
@@ -71,7 +71,7 @@ export const sendMessage = async (req, res) => {
             io.to(recipientSocketId).emit("newMessage", newMessage);
         };
         
-        res(201).json(newMessage);
+        res.status(201).json(newMessage);
 
     } catch (error) {
         console.error("Error in message controller send message function.", error.message);

@@ -50,14 +50,15 @@ export const useChatStore = create((set, get) => ({
         });
     },
 
-    unsubscribeToMessages: () => {
-        
+    unsubscribeFromMessages: () => {
+        const socket = useAuthStore.getState().socket;
+        socket.off("newMessage");
     },
 
     sendMessage: async (messageData) => {
         const { selectedUser, messages } = get();
         try {
-            const response = axiosInstance.post(`/messages/send/${selectedUser._id}`, messageData);
+            const response = await axiosInstance.post(`/messages/send/${selectedUser._id}`, messageData);
             set({ messages: [...messages, response.data] });
         } catch (error) {
             toast.error(error.response.data.message);
