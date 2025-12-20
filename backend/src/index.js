@@ -11,10 +11,9 @@ import { app, server } from "./lib/socket.js";
 import path from "path";
 
 
-// Access __dirname for ESM
-const __dirname = path.resolve();
-
-app.use(express.json());
+// Increase payload size for image uploads
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 const isProduction = process.env.NODE_ENV === "production";
 
@@ -28,13 +27,16 @@ app.use(cors(
        credentials: true 
     }
 ));
+
 app.use(cookieParser());
+
 // Expose the endpoints last to prevent CORS and null payload errors
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
 
 // Serve React build static files to the browser through http endpoints
 if (isProduction) {
+  const __dirname = path.resolve();
   const distPath = path.join(__dirname, "../frontend/dist");
 
   app.use(express.static(distPath));
