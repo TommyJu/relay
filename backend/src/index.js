@@ -12,14 +12,21 @@ import path from "path";
 import { fileURLToPath } from 'url';
 
 
-// Accesss __dirname from an ESM module
+// Access __dirname for ESM
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 app.use(express.json());
+
+const isProduction = process.env.NODE_ENV === "production";
+
+const allowedOrigins =
+  isProduction
+    ? ["https://relay.azurewebsites.net"]
+    : ["http://localhost:5173"];
 app.use(cors(
     {
-       origin: "http://localhost:5173",
+       origin: allowedOrigins,
        credentials: true 
     }
 ));
@@ -29,14 +36,18 @@ app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
 
 // Serve React build static files to the browser through http endpoints
-if(process.env.NODE_ENV === "production") {
-    app.use(express.static(path.join(__dirname, "../../frontend/dist")));
-};
-app.get(/.*/, function (req, res) {
-  res.sendFile(path.join(__dirname, '../../frontend', "dist", 'index.html'));
-});
+if (isProduction) {
+  const distPath = path.resolve(__dirname, "../../frontend/dist");
 
-const PORT = process.env.PORT;
+  app.use(express.static(distPath));
+
+  // SPA fallback (Express v5 compatible)
+  app.get(/.*/, (req, res) => {
+    res.sendFile(path.resolve(distPath, "index.html"));
+  });
+}
+
+const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}.`);
     connectDB();
