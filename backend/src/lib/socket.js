@@ -13,6 +13,7 @@ const io = new Server(server, {
   cors: {
     origin: allowedOrigin,
   },
+  transports: ["websocket", "polling"]
 });
 
 const userSocketMap = { }; // {userId: socketId}

@@ -18,13 +18,13 @@ app.use(express.json());
 
 const isProduction = process.env.NODE_ENV === "production";
 
-const allowedOrigins =
+const allowedOrigin =
   isProduction
-    ? ["https://relay.azurewebsites.net"]
-    : ["http://localhost:5173"];
+    ? "https://relay.azurewebsites.net"
+    : "http://localhost:5173";
 app.use(cors(
     {
-       origin: allowedOrigins,
+       origin: allowedOrigin,
        credentials: true 
     }
 ));
