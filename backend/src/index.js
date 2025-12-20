@@ -9,12 +9,10 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import { app, server } from "./lib/socket.js";
 import path from "path";
-import { fileURLToPath } from 'url';
 
 
 // Access __dirname for ESM
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const __dirname = path.resolve();
 
 app.use(express.json());
 
@@ -37,7 +35,7 @@ app.use("/api/messages", messageRoutes);
 
 // Serve React build static files to the browser through http endpoints
 if (isProduction) {
-  const distPath = path.resolve(__dirname, "../../frontend/dist");
+  const distPath = path.resolve(__dirname, "../frontend/dist");
 
   app.use(express.static(distPath));
 
