@@ -9,7 +9,12 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import { app, server } from "./lib/socket.js";
 import path from "path";
+import { fileURLToPath } from 'url';
 
+
+// Accesss __dirname from an ESM module
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 app.use(express.json());
 app.use(cors(
