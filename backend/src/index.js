@@ -35,13 +35,13 @@ app.use("/api/messages", messageRoutes);
 
 // Serve React build static files to the browser through http endpoints
 if (isProduction) {
-  const distPath = path.resolve(__dirname, "../frontend/dist");
+  const distPath = path.join(__dirname, "../frontend/dist");
 
   app.use(express.static(distPath));
 
   // SPA fallback (Express v5 compatible)
   app.get(/.*/, (req, res) => {
-    res.sendFile(path.resolve(distPath, "index.html"));
+    res.sendFile(path.join(distPath, "index.html"));
   });
 }
 
