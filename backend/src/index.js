@@ -30,10 +30,10 @@ app.use("/api/messages", messageRoutes);
 
 // Serve React build static files to the browser through http endpoints
 if(process.env.NODE_ENV === "production") {
-    app.use(express.static(path.join(__dirname, "../frontend/dist")));
+    app.use(express.static(path.join(__dirname, "../../frontend/dist")));
 };
 app.get(/.*/, function (req, res) {
-  res.sendFile(path.join(__dirname, '../frontend', "dist", 'index.html'));
+  res.sendFile(path.join(__dirname, '../../frontend', "dist", 'index.html'));
 });
 
 const PORT = process.env.PORT;
