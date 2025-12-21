@@ -1,4 +1,4 @@
-import { generateToken } from "../lib/token.js";
+import { setJwtCookie } from "../lib/authToken.js";
 import {
   validateSignupInput,
   hashPassword,
@@ -19,6 +19,8 @@ export const signup = async (req, res) => {
     const hashedPassword = await hashPassword(password);
 
     const newUser = await createAndSaveUser(fullName, email, hashedPassword);
+    
+    setJwtCookie(newUser._id, res);
     res.status(201).json(parseUserToJSON(newUser));
   } catch (error) {
     sendErrorResponse(res, error, "auth controller signup");
@@ -30,7 +32,8 @@ export const login = async (req, res) => {
 
   try {
     const user = await validateLoginInput(email, password);
-    await generateToken(user._id, res);
+    
+    setJwtCookie(user._id, res);
     res.status(200).json(parseUserToJSON(user));
   } catch (error) {
     sendErrorResponse(res, error, "auth controller login");

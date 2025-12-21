@@ -1,6 +1,6 @@
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
-import { generateToken } from "../lib/token.js";
+import { setJwtCookie } from "../lib/authToken.js";
 import {
   MIN_PASSWORD_LENGTH,
   NUM_SALT_ROUNDS_FOR_PASSWORD_HASH,
@@ -40,7 +40,6 @@ export const createAndSaveUser = async (fullName, email, hashedPassword) => {
   });
 
   if (newUser) {
-    generateToken(newUser._id, res);
     await newUser.save();
     return newUser;
   } else {

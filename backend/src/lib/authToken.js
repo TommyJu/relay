@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 const TOKEN_LIFESPAN_IN_DAYS = 7;
 const MILLISECONDS_IN_ONE_DAY = 24 * 60 * 60 * 1000;
 
-export const generateToken = (userId, res) => {
+export const setJwtCookie = (userId, res) => {
     const token = jwt.sign(
         { userId }, 
         process.env.JWT_SECRET,
