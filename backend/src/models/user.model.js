@@ -1,7 +1,5 @@
 import mongoose from "mongoose";
-
-
-export const MIN_PASSWORD_LENGTH = 6;
+import { MIN_PASSWORD_LENGTH } from "../constants/auth.constants.js";
 
 const userSchema = new mongoose.Schema(
     {
