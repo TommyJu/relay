@@ -1,8 +1,12 @@
-import User from "../models/user.model.js";
-import bcrypt from "bcryptjs";
 import { generateToken } from "../lib/token.js";
-import cloudinary from "../lib/cloudinary.js";
-import { validateSignupInput, hashPassword, createAndSaveUser} from "../services/auth.service.js"
+import {
+  validateSignupInput,
+  hashPassword,
+  createAndSaveUser,
+  validateLoginInput,
+  uploadProfilePicture,
+  updateUserProfilePicture
+} from "../services/auth.service.js";
 import { sendErrorResponse } from "../utils/errorHandling.js";
 import { parseUserToJSON } from "../utils/jsonFormatting.js";
 
@@ -14,10 +18,9 @@ export const signup = async (req, res) => {
 
     const hashedPassword = await hashPassword(password);
 
-    await createAndSaveUser(fullName, email, hashedPassword);
+    const newUser = await createAndSaveUser(fullName, email, hashedPassword);
     res.status(201).json(parseUserToJSON(newUser));
-  
-} catch (error) {
+  } catch (error) {
     sendErrorResponse(res, error, "auth controller signup");
   }
 };
@@ -26,24 +29,11 @@ export const login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(400).json({ message: "Invalid credentials." });
-    }
-
-    const isPasswordCorrect = await bcrypt.compare(password, user.password);
-    if (!isPasswordCorrect) {
-      return res.status(400).json({ message: "Invalid credentials." });
-    }
-
-    generateToken(user._id, res);
+    const user = await validateLoginInput(email, password);
+    await generateToken(user._id, res);
     res.status(200).json(parseUserToJSON(user));
   } catch (error) {
-    console.error(
-      "Error in authentication controller login function.",
-      error.message
-    );
-    res.status(500).json({ message: "Internal server error." });
+    sendErrorResponse(res, error, "auth controller login");
   }
 };
 
@@ -53,11 +43,7 @@ export const logout = (req, res) => {
     res.cookie("jwt", "", { maxAge: 0 });
     res.status(200).json({ message: "Logged out successfully." });
   } catch (error) {
-    console.error(
-      "Error in authentication controller logout function.",
-      error.message
-    );
-    res.status(500).json({ message: "Internal server error." });
+    sendErrorResponse(res, error, "auth controller logout");
   }
 };
 
@@ -66,24 +52,12 @@ export const updateProfile = async (req, res) => {
     const { profilePic } = req.body;
     const userId = req.user._id;
 
-    if (!profilePic) {
-      return res.status(400).json({ message: "Profile picture is required." });
-    }
-    const uploadResponse = await cloudinary.uploader.upload(profilePic);
-
-    const updatedUser = await User.findByIdAndUpdate(
-      userId,
-      { profilePic: uploadResponse.secure_url },
-      { new: true }
-    );
-
+    const secure_url = await uploadProfilePicture(profilePic);
+    const updatedUser = await updateUserProfilePicture(secure_url, userId);
+    
     res.status(200).json(updatedUser);
   } catch (error) {
-    console.error(
-      "Error in authentication controller update profile function.",
-      error.message
-    );
-    res.status(500).json({ message: "Internal server error." });
+    sendErrorResponse(res, error, "auth controller update profile");
   }
 };
 
@@ -91,11 +65,6 @@ export const checkAuth = (req, res) => {
   try {
     res.status(200).json(req.user);
   } catch (error) {
-    console.error(
-      "Error in authentication controller check authentication function.",
-      error.message
-    );
-    res.status(500).json({ message: "Internal server error." });
+    sendErrorResponse(res, error, "auth controller check auth");
   }
 };
-
