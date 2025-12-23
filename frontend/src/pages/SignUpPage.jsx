@@ -14,8 +14,8 @@ import { Link } from "react-router-dom";
 import {
   MAX_FULLNAME_LENGTH,
 } from "../../../shared/auth.constants";
-import { validateSignupForm, normalizeSignupData } from "../../../shared/auth.utils";
-
+import { normalizeSignupData } from "../../../shared/auth.utils";
+import { validateSignupForm } from "../lib/utils";
 
 const SignUpPage = () => {
   // Local state
