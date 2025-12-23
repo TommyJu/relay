@@ -2,6 +2,8 @@ import { useRef, useState } from "react";
 import { useChatStore } from "../store/useChatStore";
 import { Image, Send, X } from "lucide-react";
 import toast from "react-hot-toast";
+import { MAX_MESSAGE_LENGTH } from "../../../shared/message.constants";
+
 
 const MessageInput = () => {
   const [text, setText] = useState("");
@@ -75,6 +77,7 @@ const MessageInput = () => {
             type="text"
             className="w-full input input-bordered rounded-lg input-sm sm:input-md"
             placeholder="Type a message..."
+            maxLength={MAX_MESSAGE_LENGTH}
             value={text}
             onChange={(e) => setText(e.target.value)}
           />
