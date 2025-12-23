@@ -13,4 +13,5 @@ export const chatService = {
   sendMessageToUser(receiverId, messageData) {
     return axiosInstance.post(`/messages/send/${receiverId}`, messageData);
   },
+
 };
