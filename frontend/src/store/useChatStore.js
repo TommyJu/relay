@@ -40,7 +40,7 @@ export const useChatStore = create((set, get) => ({
     const { selectedUser, messages } = get();
     try {
       const response = await chatService.sendMessageToUser(
-        selectedUser,
+        selectedUser._id,
         messageData
       );
       set({ messages: [...messages, response.data] });
