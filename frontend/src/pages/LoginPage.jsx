@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
-import AuthImagePattern from "../components/AuthImagePattern";
 import { Link } from "react-router-dom";
 import { Eye, EyeOff, Loader2, Lock, Mail, MessageSquare } from "lucide-react";
 import { normalizeLoginData } from "../../../shared/auth.utils";
@@ -126,13 +125,18 @@ const LoginPage = () => {
         </div>
       </div>
 
-      {/* Right Side - Image/Pattern */}
-      <AuthImagePattern
-        title={"Welcome back!"}
-        subtitle={
-          "Sign in to continue your conversations and catch up with your messages."
-        }
-      />
+      {/* right side: animation*/}
+      <div className="hidden lg:flex bg-black">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="w-full h-full object-contain"
+        >
+          <source src="../../public/relay_animation.webm" type="video/webm" />
+        </video>
+      </div>
     </div>
   );
 };

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
-import AuthImagePattern from "../components/AuthImagePattern";
 import {
   Eye,
   EyeOff,
@@ -11,9 +10,7 @@ import {
   User,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import {
-  MAX_FULLNAME_LENGTH,
-} from "../../../shared/auth.constants";
+import { MAX_FULLNAME_LENGTH } from "../../../shared/auth.constants";
 import { normalizeSignupData } from "../../../shared/auth.utils";
 import { validateSignupForm } from "../lib/utils";
 
@@ -168,11 +165,18 @@ const SignUpPage = () => {
         </div>
       </div>
 
-      {/* right side: illustration*/}
-      <AuthImagePattern
-        title="Join our community"
-        subtitle="Connect with friends, share moments, and stay in touch with your loved ones."
-      />
+      {/* right side: animation*/}
+      <div className="hidden lg:flex bg-black">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="w-full h-full object-contain"
+        >
+          <source src="../../public/relay_animation.webm" type="video/webm" />
+        </video>
+      </div>
     </div>
   );
 };
