@@ -16,12 +16,12 @@ import path from "path";
 
 // Increase payload size for image uploads
 app.use(express.json({ limit: MAX_PAYLOAD_SIZE }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: MAX_PAYLOAD_SIZE }));
 
 app.use(cors(
     {
        origin: FRONTEND_URL,
-       credentials: true 
+       credentials: true,
     }
 ));
 

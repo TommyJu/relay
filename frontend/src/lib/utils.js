@@ -12,8 +12,8 @@ export function formatMessageTime(date) {
   });
 }
 
-export const handleToastErrorMessage = (error, defaultMsg = "Something went wrong") => {
-  const msg = error?.response?.data?.message || defaultMsg;
+export const handleToastErrorMessage = (error) => {
+  const msg = error?.response?.data?.message || "Something went wrong";
   toast.error(msg);
 };
 
