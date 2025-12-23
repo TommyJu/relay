@@ -134,7 +134,7 @@ const LoginPage = () => {
           playsInline
           className="w-full h-full object-contain"
         >
-          <source src="../../public/relay_animation.webm" type="video/webm" />
+          <source src="/relay_animation.webm" type="video/webm" />
         </video>
       </div>
     </div>
