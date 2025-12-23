@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { MIN_PASSWORD_LENGTH } from "../constants/auth.constants.js";
+import { MIN_PASSWORD_LENGTH } from "../../../shared/constants/auth.constants.js";
 
 const userSchema = new mongoose.Schema(
     {

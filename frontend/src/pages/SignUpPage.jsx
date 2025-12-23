@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
 import AuthImagePattern from "../components/AuthImagePattern";
-import toast from "react-hot-toast";
 import {
   Eye,
   EyeOff,
@@ -12,7 +11,10 @@ import {
   User,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { MIN_PASSWORD_LENGTH, MAX_FULLNAME_LENGTH } from "../../../shared/constants/auth.constants"
+import {
+  MAX_FULLNAME_LENGTH,
+} from "../../../shared/constants/auth.constants";
+import { validateSignupForm, normalizeSignupData } from "../lib/utils";
 
 
 const SignUpPage = () => {
@@ -24,29 +26,14 @@ const SignUpPage = () => {
     password: "",
   });
 
-  // Auth store
   const { signup, isSigningUp } = useAuthStore();
-
-  // Form validation
-  const validateSignupForm = () => {
-    if (!signupFormData.fullName.trim())
-      return toast.error("Full name is required");
-    if (!signupFormData.email.trim()) return toast.error("Email is required");
-    if (!/\S+@\S+\.\S+/.test(signupFormData.email))
-      return toast.error("Invalid email format");
-    if (!signupFormData.password) return toast.error("Password is required");
-    if (signupFormData.password.length < MIN_PASSWORD_LENGTH)
-      return toast.error(`Password must be at least ${MIN_PASSWORD_LENGTH} characters`);
-
-    return true;
-  };
 
   // Event handlers
   const handleSignupFormSubmit = (e) => {
     e.preventDefault();
-    const success = validateSignupForm();
+    const success = validateSignupForm(signupFormData);
     if (success === true) {
-      signup(signupFormData);
+      signup(normalizeSignupData(signupFormData));
     }
   };
 
@@ -84,7 +71,7 @@ const SignUpPage = () => {
                   type="text"
                   className={`input input-bordered w-full pl-10`}
                   placeholder="John Doe"
-                  maxLength={ MAX_FULLNAME_LENGTH }
+                  maxLength={MAX_FULLNAME_LENGTH}
                   value={signupFormData.fullName}
                   onChange={(e) =>
                     setSignupFormData({
@@ -139,6 +126,7 @@ const SignUpPage = () => {
                     })
                   }
                 />
+
                 <button
                   type="button"
                   className="absolute inset-y-0 right-0 pr-3 flex items-center"
