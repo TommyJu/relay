@@ -166,7 +166,7 @@ const SignUpPage = () => {
       </div>
 
       {/* right side: animation*/}
-      <div className="hidden md:flex bg-base-200">
+      <div className="hidden md:flex">
         <video
           autoPlay
           loop
