@@ -1,7 +1,7 @@
 import toast from "react-hot-toast";
 import {
   MIN_PASSWORD_LENGTH,
-} from "../../../shared/constants/auth.constants";
+} from "../../../shared/auth.constants";
 
 
 export function formatMessageTime(date) {
@@ -27,9 +27,3 @@ export const validateSignupForm = ({ fullName, email, password }) => {
 
   return true;
 };
-
-export const normalizeSignupData = ({ fullName, email, password }) => ({
-  fullName: fullName.trim(),
-  email: email.trim().toLowerCase(),
-  password,
-});

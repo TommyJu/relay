@@ -9,10 +9,11 @@ import {
 } from "../services/auth.service.js";
 import { sendErrorResponse } from "../utils/errorHandling.js";
 import { parseUserToJSON } from "../utils/jsonFormatting.js";
+import { normalizeSignupData, normalizeLoginData } from "../../../shared/auth.utils.js";
 
 
 export const signup = async (req, res) => {
-  const { fullName, email, password } = req.body;
+  const { fullName, email, password } = normalizeSignupData(req.body);
   try {
     await validateSignupInput(fullName, email, password);
 
@@ -28,7 +29,7 @@ export const signup = async (req, res) => {
 };
 
 export const login = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password } = normalizeLoginData(req.body);
 
   try {
     const user = await validateLoginInput(email, password);

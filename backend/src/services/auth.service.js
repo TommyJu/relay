@@ -4,7 +4,7 @@ import {
   MIN_PASSWORD_LENGTH,
   NUM_SALT_ROUNDS_FOR_PASSWORD_HASH,
   MAX_FULLNAME_LENGTH
-} from "../../../shared/constants/auth.constants.js";
+} from "../../../shared/auth.constants.js";
 import { throwError } from "../utils/errorHandling.js";
 import cloudinary from "../lib/cloudinary.js";
 

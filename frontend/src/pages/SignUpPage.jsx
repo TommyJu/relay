@@ -13,8 +13,8 @@ import {
 import { Link } from "react-router-dom";
 import {
   MAX_FULLNAME_LENGTH,
-} from "../../../shared/constants/auth.constants";
-import { validateSignupForm, normalizeSignupData } from "../lib/utils";
+} from "../../../shared/auth.constants";
+import { validateSignupForm, normalizeSignupData } from "../../../shared/auth.utils";
 
 
 const SignUpPage = () => {
