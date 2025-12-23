@@ -19,12 +19,11 @@ const ChatContainer = () => {
   const { authUser } = useAuthStore();
   const messageEndRef = useRef(null);
 
-    useEffect(() => {
+  useEffect(() => {
     if (selectedUser) {
       getMessages(selectedUser._id);
     }
   }, [selectedUser, getMessages]);
-
 
   useEffect(() => {
     subscribeToMessages();
@@ -56,7 +55,9 @@ const ChatContainer = () => {
         {messages.map((message) => (
           <div
             key={message._id}
-            className={`chat ${message.senderId === authUser._id ? "chat-end" : "chat-start"}`}
+            className={`chat ${
+              message.senderId === authUser._id ? "chat-end" : "chat-start"
+            }`}
             ref={messageEndRef}
           >
             <div className=" chat-image avatar">
@@ -76,15 +77,15 @@ const ChatContainer = () => {
                 {formatMessageTime(message.createdAt)}
               </time>
             </div>
-            <div className="chat-bubble flex flex-col">
+            <div className="chat-bubble inline-block !max-w-[80] overflow-hidden !w-auto break-words">
               {message.image && (
                 <img
                   src={message.image}
                   alt="Attachment"
-                  className="sm:max-w-[200px] rounded-md mb-2"
+                  className="rounded-md mb-2 w-full max-w-[90vw] sm:max-w-[200px]"
                 />
               )}
-              {message.text && <p>{message.text}</p>}
+              {message.text && <p className="break-words">{message.text}</p>}
             </div>
           </div>
         ))}

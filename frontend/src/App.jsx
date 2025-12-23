@@ -36,31 +36,33 @@ const App = () => {
   }
 
   return (
-    <div>
+    <div className="h-screen flex flex-col">
       <Navbar />
 
-      <Routes>
-        <Route
-          path="/"
-          element={authUser ? <HomePage /> : <Navigate to="/login" />}
-        />
-        <Route
-          path="/signup"
-          element={authUser ? <Navigate to="/" /> : <SignUpPage />}
-        />
-        <Route
-          path="/login"
-          element={authUser ? <Navigate to="/" /> : <LoginPage />}
-        />
-        <Route
-          path="/settings"
-          element={ <SettingsPage /> }
-        />
-        <Route
-          path="/profile"
-          element={authUser ? <ProfilePage /> : <Navigate to="/login" />}
-        />
-      </Routes>
+      <div className="pt-16 flex-1">
+        <Routes>
+          <Route
+            path="/"
+            element={authUser ? <HomePage /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/signup"
+            element={authUser ? <Navigate to="/" /> : <SignUpPage />}
+          />
+          <Route
+            path="/login"
+            element={authUser ? <Navigate to="/" /> : <LoginPage />}
+          />
+          <Route
+            path="/settings"
+            element={ <SettingsPage /> }
+          />
+          <Route
+            path="/profile"
+            element={authUser ? <ProfilePage /> : <Navigate to="/login" />}
+          />
+        </Routes>
+      </div>
 
       <Toaster />
     </div>
