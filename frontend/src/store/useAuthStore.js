@@ -1,9 +1,8 @@
 import { create } from "zustand";
 import toast from "react-hot-toast";
-import { io } from "socket.io-client";
-import { BACKEND_BASE_URL } from "../config/url";
-import { handleApiError } from "../lib/utils";
+import { handleToastErrorMessage } from "../lib/utils";
 import { authService } from "../services/authService"
+import { createSocket } from "../lib/socket"
 
 
 
@@ -38,7 +37,7 @@ export const useAuthStore = create((set, get) => ({
             toast.success("Account created successfully");
             get().connectSocket();
         } catch (error) {
-            handleApiError(error);
+            handleToastErrorMessage(error);
         } finally {
             set({ isSigningUp: false }); 
         }
@@ -53,7 +52,7 @@ export const useAuthStore = create((set, get) => ({
             toast.success("Logged in successfully");
             get().connectSocket();
         } catch (error) {
-            handleApiError(error);
+            handleToastErrorMessage(error);
         } finally {
             set({ isLoggingIn: false });
         }
@@ -66,7 +65,7 @@ export const useAuthStore = create((set, get) => ({
             toast.success("Logged out successfully");
             get().disconnectSocket();
         } catch (error) {
-            handleApiError(error);
+            handleToastErrorMessage(error);
         }
     },
 
@@ -78,7 +77,7 @@ export const useAuthStore = create((set, get) => ({
             set({ authUser: response.data });
             toast.success("Profile picture uploaded successfully");
         } catch (error) {
-            handleApiError(error);
+            handleToastErrorMessage(error);
         } finally {
             set({ isUpdatingProfile: false });
         }
@@ -90,25 +89,20 @@ export const useAuthStore = create((set, get) => ({
         // Prevents redundant socket connection
         if (!authUser || get().socket?.connected) return;
 
-        const socket = io(BACKEND_BASE_URL, 
-            {
-                auth: {
-                    userId: authUser._id
-                }
-            }
-        );
+        const socket = createSocket(authUser);
         socket.connect();
-        
         set({socket: socket});
 
+        // Configure socket to refresh online users when needed
         socket.on("getOnlineUsers", (userIds) => {
             set({ onlineUsers: userIds });
         });
     },
 
     disconnectSocket: () => {
-        if (get().socket?.connected) {
-            get().socket.disconnect();
+        const { socket } = get();
+        if (socket?.connected) {
+            socket.disconnect();
             set({ socket: null });
         };
     },

@@ -9,7 +9,7 @@ export function formatMessageTime(date) {
   });
 }
 
-export const handleApiError = (error, defaultMsg = "Something went wrong") => {
+export const handleToastErrorMessage = (error, defaultMsg = "Something went wrong") => {
   const msg = error?.response?.data?.message || defaultMsg;
   toast.error(msg);
 };
