@@ -126,7 +126,7 @@ const LoginPage = () => {
       </div>
 
       {/* right side: animation*/}
-      <div className="hidden lg:flex bg-black">
+      <div className="hidden md:flex bg-base-200">
         <video
           autoPlay
           loop
