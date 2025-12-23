@@ -1,8 +1,9 @@
 import { create } from "zustand";
-import { axiosInstance } from "../lib/axios";
 import toast from "react-hot-toast";
 import { io } from "socket.io-client";
 import { BACKEND_BASE_URL } from "../config/url";
+import { handleApiError } from "../lib/utils";
+import { authService } from "../services/authService"
 
 
 
@@ -17,7 +18,7 @@ export const useAuthStore = create((set, get) => ({
 
     checkAuth: async () => {
         try {
-            const response = await axiosInstance.get("/auth/check-auth");
+            const response = authService.checkAuth();
             set({ authUser: response.data });
             get().connectSocket();
         } catch (error) {
@@ -32,12 +33,12 @@ export const useAuthStore = create((set, get) => ({
         set({ isSigningUp: true });    
     
         try {
-            const response = await axiosInstance.post("/auth/signup", data);
+            const response = await authService.signup(data);
             set({ authUser: response.data });
             toast.success("Account created successfully");
             get().connectSocket();
         } catch (error) {
-            toast.error(error.response.data.message);
+            handleApiError(error);
         } finally {
             set({ isSigningUp: false }); 
         }
@@ -47,12 +48,12 @@ export const useAuthStore = create((set, get) => ({
         set({ isLoggingIn: true });
 
         try {
-            const response = await axiosInstance.post("/auth/login", data);
+            const response = await authService.login(data);
             set({ authUser: response.data });
             toast.success("Logged in successfully");
             get().connectSocket();
         } catch (error) {
-            toast.error(error.response.data.message);
+            handleApiError(error);
         } finally {
             set({ isLoggingIn: false });
         }
@@ -60,12 +61,12 @@ export const useAuthStore = create((set, get) => ({
 
     logout: async () => {
         try {
-            await axiosInstance.post("/auth/logout");
+            await authService.logout();
             set({ authUser: null });
             toast.success("Logged out successfully");
             get().disconnectSocket();
         } catch (error) {
-            toast.error(error.response.data.message);
+            handleApiError(error);
         }
     },
 
@@ -73,11 +74,11 @@ export const useAuthStore = create((set, get) => ({
         set({ isUpdatingProfile: true });
 
         try {
-            const response = await axiosInstance.put("/auth/update-profile", data);
+            const response = await authService.updateProfile(data);
             set({ authUser: response.data });
             toast.success("Profile picture uploaded successfully");
         } catch (error) {
-            toast.error(error.response.data.message);
+            handleApiError(error);
         } finally {
             set({ isUpdatingProfile: false });
         }
