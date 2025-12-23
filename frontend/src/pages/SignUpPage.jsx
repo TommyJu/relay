@@ -12,6 +12,8 @@ import {
   User,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { MIN_PASSWORD_LENGTH, MAX_FULLNAME_LENGTH } from "../../../shared/constants/auth.constants"
+
 
 const SignUpPage = () => {
   // Local state
@@ -33,8 +35,8 @@ const SignUpPage = () => {
     if (!/\S+@\S+\.\S+/.test(signupFormData.email))
       return toast.error("Invalid email format");
     if (!signupFormData.password) return toast.error("Password is required");
-    if (signupFormData.password.length < 6)
-      return toast.error("Password must be at least 6 characters");
+    if (signupFormData.password.length < MIN_PASSWORD_LENGTH)
+      return toast.error(`Password must be at least ${MIN_PASSWORD_LENGTH} characters`);
 
     return true;
   };
@@ -82,6 +84,7 @@ const SignUpPage = () => {
                   type="text"
                   className={`input input-bordered w-full pl-10`}
                   placeholder="John Doe"
+                  maxLength={ MAX_FULLNAME_LENGTH }
                   value={signupFormData.fullName}
                   onChange={(e) =>
                     setSignupFormData({

@@ -1,10 +1,10 @@
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
-import { setJwtCookie } from "../lib/authToken.js";
 import {
   MIN_PASSWORD_LENGTH,
   NUM_SALT_ROUNDS_FOR_PASSWORD_HASH,
-} from "../constants/auth.constants.js";
+  MAX_FULLNAME_LENGTH
+} from "../../../shared/constants/auth.constants.js";
 import { throwError } from "../utils/errorHandling.js";
 import cloudinary from "../lib/cloudinary.js";
 
@@ -13,6 +13,11 @@ export const validateSignupInput = async (fullName, email, password) => {
   const isInputFieldEmpty = !fullName || !email || !password;
   if (isInputFieldEmpty) {
     throwError(`All fields are required.`, 400);
+  }
+
+  const isFullNameTooLong = fullName.length > MAX_FULLNAME_LENGTH;
+  if (isFullNameTooLong) {
+    throwError(`Full name must not exceed ${MAX_FULLNAME_LENGTH} characters`, 400)
   }
 
   const isPasswordTooShort = password.length < MIN_PASSWORD_LENGTH;
