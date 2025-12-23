@@ -77,7 +77,7 @@ const ChatContainer = () => {
                 {formatMessageTime(message.createdAt)}
               </time>
             </div>
-            <div className="chat-bubble inline-block !max-w-[80] overflow-hidden !w-auto break-words">
+            <div className="chat-bubble inline-block max-w-[80]! overflow-hidden w-auto!">
               {message.image && (
                 <img
                   src={message.image}
@@ -85,7 +85,7 @@ const ChatContainer = () => {
                   className="rounded-md mb-2 w-full max-w-[90vw] sm:max-w-[200px]"
                 />
               )}
-              {message.text && <p className="break-words">{message.text}</p>}
+              {message.text && <p className="wrap-break-word">{message.text}</p>}
             </div>
           </div>
         ))}
