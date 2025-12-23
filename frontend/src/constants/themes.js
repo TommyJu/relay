@@ -1,3 +1,5 @@
+export const DEFAULT_THEME = "coffee";
+
 export const THEMES = [
   "light",
   "dark",

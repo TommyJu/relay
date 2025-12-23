@@ -1,7 +1,6 @@
 import { create } from "zustand";
+import { DEFAULT_THEME } from "../constants/themes";
 
-
-const DEFAULT_THEME = "coffee";
 
 export const useThemeStore = create((set) => ({
     theme: localStorage.getItem("theme") || DEFAULT_THEME,
