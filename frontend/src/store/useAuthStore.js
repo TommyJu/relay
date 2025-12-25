@@ -17,12 +17,16 @@ export const useAuthStore = create((set, get) => ({
 
     checkAuth: async () => {
         try {
-            const response = authService.checkAuth();
+            const response = await authService.checkAuth();
             set({ authUser: response.data });
             get().connectSocket();
         } catch (error) {
             set({ authUser: null });
-            console.error("Error in checkAuth: ", error);
+            if (error.status === 401) {
+                console.info("User is not authenticated.");
+            } else {
+                console.error("Error in checkAuth: ", error);
+            };
         } finally {
             set({ isCheckingAuth: false });
         }
