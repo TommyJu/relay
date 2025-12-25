@@ -23,7 +23,7 @@ const Navbar = () => {
               <h1 className="text-lg font-bold">Relay</h1>
             </Link>
           </div>
-
+          {!authUser && <p className="text-center px-6 hidden sm:block sm:text-sm md:text-base">Connect with friends, share moments, and stay in touch.</p>}
           <div className="flex items-center gap-2">
             <Link
               to={"/settings"}

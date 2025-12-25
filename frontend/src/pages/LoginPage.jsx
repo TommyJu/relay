@@ -126,16 +126,18 @@ const LoginPage = () => {
       </div>
 
       {/* right side: animation*/}
-      <div className="hidden md:flex">
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="w-full h-full object-contain"
-        >
-          <source src="/relay_animation.webm" type="video/webm" />
-        </video>
+      <div className="flex flex-col h-full">
+        <div className="hidden md:flex">
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full flex-1 object-contain"
+          >
+            <source src="/relay_animation.webm" type="video/webm" />
+          </video>
+        </div>
       </div>
     </div>
   );
