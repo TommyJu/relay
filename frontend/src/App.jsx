@@ -39,7 +39,7 @@ const App = () => {
     <div className="h-screen flex flex-col">
       <Navbar />
 
-      <div className="flex-1 pt-16 overflow-hidden">
+      <div className="flex-1 pt-16 overflow-scroll">
         <Routes>
           <Route
             path="/"
