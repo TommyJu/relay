@@ -39,7 +39,7 @@ const ChatContainer = () => {
 
   if (isMessagesLoading) {
     return (
-      <div className="flex-1 flex flex-col overflow-auto">
+      <div className="flex flex-col h-full w-full px-2">
         <ChatHeader />
         <MessageSkeleton />
         <MessageInput />
@@ -48,14 +48,15 @@ const ChatContainer = () => {
   }
 
   return (
-    <div className="flex-1 flex flex-col overflow-auto">
+    <div className="flex flex-col h-full w-full px-2">
       <ChatHeader />
 
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      {/* messages container */}
+      <div className="flex-1 p-2 space-y-2 overflow-y-scroll overflow-x-hidden">
         {messages.map((message) => (
           <div
             key={message._id}
-            className={`chat ${
+            className={`chat min-w-0 ${
               message.senderId === authUser._id ? "chat-end" : "chat-start"
             }`}
             ref={messageEndRef}
@@ -77,7 +78,7 @@ const ChatContainer = () => {
                 {formatMessageTime(message.createdAt)}
               </time>
             </div>
-            <div className="chat-bubble inline-block max-w-[80]! overflow-hidden w-auto!">
+            <div className="chat-bubble wrap-anywhere whitespace-pre-wrap">
               {message.image && (
                 <img
                   src={message.image}
@@ -85,12 +86,11 @@ const ChatContainer = () => {
                   className="rounded-md mb-2 w-full max-w-[90vw] sm:max-w-[200px]"
                 />
               )}
-              {message.text && <p className="wrap-break-word">{message.text}</p>}
+              {message.text && <p>{message.text}</p>}
             </div>
           </div>
         ))}
       </div>
-
       <MessageInput />
     </div>
   );
