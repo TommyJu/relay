@@ -27,11 +27,11 @@ const Sidebar = ({ isOpen, onToggle }) => {
         absolute top-0 left-0 h-full z-30
         bg-base-100 border-r border-base-300
         transition-all duration-300 ease-in-out
-        ${isOpen ? "w-72" : "w-20"}
+        ${isOpen ? "w-72" : "w-16"}
       `}
     >
       {/* Header */}
-      <div className="border-b border-base-300 p-4 flex items-center justify-between">
+      <div className="border-b border-base-300 px-2 py-4 flex items-center justify-between">
         <div className="flex items-center gap-2 overflow-hidden">
           <Users className="size-6 shrink-0" />
           {isOpen && <span className="font-medium">Contacts</span>}
@@ -52,7 +52,7 @@ const Sidebar = ({ isOpen, onToggle }) => {
               onChange={(e) => setShowOnlineOnly(e.target.checked)}
               className="checkbox checkbox-sm"
             />
-            <span className="text-sm">Show online only</span>
+            <span className="text-sm whitespace-nowrap">Show online only</span>
           </label>
           <div className="text-xs text-zinc-500 mt-1">
             ({onlineUsers.length - 1} online)
@@ -67,7 +67,7 @@ const Sidebar = ({ isOpen, onToggle }) => {
             key={user._id}
             onClick={() => setSelectedUser(user)}
             className={`
-              w-full p-3 flex items-center gap-3
+              w-full p-2 flex items-center gap-3
               hover:bg-base-300 transition-colors
               ${selectedUser?._id === user._id ? "bg-base-300" : ""}
             `}

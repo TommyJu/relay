@@ -11,8 +11,8 @@ const HomePage = () => {
 
   return (
     <div className="relative h-full w-full overflow-hidden">
-      {/* Chat always full size */}
-      <div className="h-full">
+      {/* padding left added to make space for the sidebar*/}
+      <div className="h-full pl-16">
         {!selectedUser ? <NoChatSelected /> : <ChatContainer />}
       </div>
 
