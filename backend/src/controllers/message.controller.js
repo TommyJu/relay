@@ -1,5 +1,5 @@
 import { sendErrorResponse } from "../utils/errorHandling.js";
-import { getOtherUsers, findMessagesSentAndReceived, uploadChatImage, createAndSaveMessage, emitNewMessageEvent } from "../services/message.service.js";
+import { getOtherUsers, findMessagesSentAndReceived, uploadChatImage, createAndSaveMessage, emitNewMessageEvent, removeFromPinnedUsers } from "../services/message.service.js";
 
 export const getUsersForSidebar = async (req, res) => {
   try {
@@ -8,6 +8,32 @@ export const getUsersForSidebar = async (req, res) => {
     res.status(200).json(otherUsers);
   } catch (error) {
     sendErrorResponse(res, error, "message controller get users for sidebar");
+  }
+};
+
+export const pinUserToSidebar = async (req, res) => {
+  try {
+    const loggedInUserId = req.user._id;
+    const { userToPinId } = req.params;
+
+    const updatedUser = await pinUserToSidebar(loggedInUserId, userToPinId);
+    res.status(200).json(updatedUser);
+    
+  } catch (error) {
+    sendErrorResponse(res, error, "message controller pin user to sidebar");
+  }
+};
+
+export const unpinUserFromSidebar = async (req, res) => {
+  try {
+    const loggedInUserId = req.user._id;
+    const { userToRemoveId } = req.params;
+
+    const updatedUser = await removeFromPinnedUsers(loggedInUserId, userToRemoveId);
+    res.status(200).json(updatedUser);
+    
+  } catch (error) {
+    sendErrorResponse(res, error, "message controller unpin user to sidebar");
   }
 };
 
