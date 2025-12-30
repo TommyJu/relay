@@ -10,10 +10,10 @@ export const getOtherUsers = async (loggedInUserId) => {
   return await User.find({ _id: { $ne: loggedInUserId } }).select("-password"); // Omit password from retrieved user data
 };
 
-export const addToPinnedUsers = async (loggedInUserId, userToPinId) => {
+export const addToPinnedUsers = async (loggedInUserId, userToAddId) => {
   return await User.findByIdAndUpdate(
     loggedInUserId,
-    { $addToSet: { pinnedUsers: userToPinId } },
+    { $addToSet: { pinnedUsers: userToAddId } },
     { new: true }
   );
 };
