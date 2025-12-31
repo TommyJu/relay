@@ -45,7 +45,7 @@ const Sidebar = () => {
   return (
     <aside
       className={`
-        absolute top-0 left-0 h-full z-30
+        fixed top-16 left-0 h-full z-30
         bg-base-100 border-r border-base-300
         transition-all duration-300 ease-in-out
         ${isSidebarOpen ? "w-72" : "w-16"}
@@ -91,7 +91,7 @@ const Sidebar = () => {
         </div>
       )}
       {/* User list */}
-      <div className="overflow-y-auto py-2">
+      <div className="overflow-scroll py-2">
         {/* Pinned users */}
         {filteredPinnedUsers.length > 0 && (
           <>

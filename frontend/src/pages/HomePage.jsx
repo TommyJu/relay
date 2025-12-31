@@ -8,7 +8,7 @@ const HomePage = () => {
   const { selectedUser } = useChatStore();
 
   return (
-    <div className="relative h-full w-full overflow-hidden">
+    <div className=" h-full w-full">
       {/* padding left added to make space for the sidebar*/}
       <div className="h-full pl-16">
         {!selectedUser ? <NoChatSelected /> : <ChatContainer />}

@@ -11,7 +11,6 @@ import { useAuthStore } from "./store/useAuthStore";
 import { Toaster } from "react-hot-toast";
 import { useThemeStore } from "./store/useThemeStore";
 
-
 const App = () => {
   // Authentication
   const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
@@ -36,33 +35,28 @@ const App = () => {
   }
 
   return (
-    <div className="h-screen flex flex-col">
+    <div className="h-screen flex flex-col pt-16">
       <Navbar />
 
-      <div className="flex-1 pt-16 overflow-scroll">
-        <Routes>
-          <Route
-            path="/"
-            element={authUser ? <HomePage /> : <Navigate to="/login" />}
-          />
-          <Route
-            path="/signup"
-            element={authUser ? <Navigate to="/" /> : <SignUpPage />}
-          />
-          <Route
-            path="/login"
-            element={authUser ? <Navigate to="/" /> : <LoginPage />}
-          />
-          <Route
-            path="/settings"
-            element={ <SettingsPage /> }
-          />
-          <Route
-            path="/profile"
-            element={authUser ? <ProfilePage /> : <Navigate to="/login" />}
-          />
-        </Routes>
-      </div>
+      <Routes>
+        <Route
+          path="/"
+          element={authUser ? <HomePage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/signup"
+          element={authUser ? <Navigate to="/" /> : <SignUpPage />}
+        />
+        <Route
+          path="/login"
+          element={authUser ? <Navigate to="/" /> : <LoginPage />}
+        />
+        <Route path="/settings" element={<SettingsPage />} />
+        <Route
+          path="/profile"
+          element={authUser ? <ProfilePage /> : <Navigate to="/login" />}
+        />
+      </Routes>
 
       <Toaster />
     </div>
