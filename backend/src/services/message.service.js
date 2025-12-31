@@ -5,6 +5,7 @@ import { getSocketIdFromUserId } from "../lib/socket.js";
 import { io } from "../lib/socket.js";
 import { throwError } from "../utils/errorHandling.js";
 import { MAX_MESSAGE_LENGTH } from "../../../shared/message.constants.js";
+import mongoose from "mongoose";
 
 export const getSidebarUsers = async (loggedInUserId) => {
   const loggedInUser = await User.findById(loggedInUserId)
@@ -24,6 +25,14 @@ export const getSidebarUsers = async (loggedInUserId) => {
 };
 
 export const addToPinnedUsers = async (loggedInUserId, userToAddId) => {
+  if (!mongoose.Types.ObjectId.isValid(userToAddId)) {
+    throwError("Invalid user id", 400);
+  }
+
+  if (loggedInUserId.equals(userToAddId)) {
+    throwError("You cannot pin yourself", 400);
+  }
+  
   return await User.findByIdAndUpdate(
     loggedInUserId,
     { $addToSet: { pinnedUsers: userToAddId } },

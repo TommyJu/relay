@@ -102,11 +102,6 @@ const Sidebar = ({ isOpen, onToggle }) => {
         {/* Other users */}
         {filteredOtherUsers.length > 0 && (
           <>
-            {isOpen && (
-              <div className="px-4 py-2 text-xs font-semibold text-zinc-400 uppercase">
-                Others
-              </div>
-            )}
 
             {filteredOtherUsers.map((user) => (
               <SidebarUser
