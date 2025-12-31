@@ -3,21 +3,32 @@ import { useChatStore } from "../store/useChatStore";
 import { useAuthStore } from "../store/useAuthStore";
 import SidebarSkeleton from "./skeletons/SidebarSkeleton";
 import { Users, ChevronLeft, ChevronRight } from "lucide-react";
+import SidebarUser from "./SidebarUser";
 
 const Sidebar = ({ isOpen, onToggle }) => {
-  const { getUsers, users, selectedUser, setSelectedUser, isUsersLoading } =
-    useChatStore();
+  const {
+    getSidebarUsers,
+    pinnedChatUsers,
+    otherChatUsers,
+    selectedUser,
+    setSelectedUser,
+    isUsersLoading,
+  } = useChatStore();
   const { onlineUsers } = useAuthStore();
 
   const [showOnlineOnly, setShowOnlineOnly] = useState(false);
 
   useEffect(() => {
-    getUsers();
-  }, [getUsers]);
+    getSidebarUsers();
+  }, [getSidebarUsers]);
 
-  const filteredUsers = showOnlineOnly
-    ? users.filter((user) => onlineUsers.includes(user._id))
-    : users;
+  const filterOnline = (users) =>
+    showOnlineOnly
+      ? users.filter((user) => onlineUsers.includes(user._id))
+      : users;
+
+  const filteredPinnedUsers = filterOnline(pinnedChatUsers);
+  const filteredOtherUsers = filterOnline(otherChatUsers);
 
   if (isUsersLoading) return <SidebarSkeleton />;
 
@@ -62,37 +73,49 @@ const Sidebar = ({ isOpen, onToggle }) => {
 
       {/* User list */}
       <div className="overflow-y-auto py-2">
-        {filteredUsers.map((user) => (
-          <button
-            key={user._id}
-            onClick={() => setSelectedUser(user)}
-            className={`
-              w-full p-2 flex items-center gap-3
-              hover:bg-base-300 transition-colors
-              ${selectedUser?._id === user._id ? "bg-base-300" : ""}
-            `}
-          >
-            <div className="relative">
-              <img
-                src={user.profilePic || "/avatar.png"}
-                alt={user.fullName}
-                className="size-12 object-cover rounded-full"
-              />
-              {onlineUsers.includes(user._id) && (
-                <span className="absolute bottom-0 right-0 size-3 bg-green-500 rounded-full ring-2 ring-base-100" />
-              )}
-            </div>
-
+        {/* Pinned users */}
+        {filteredPinnedUsers.length > 0 && (
+          <>
             {isOpen && (
-              <div className="text-left min-w-0">
-                <div className="font-medium truncate">{user.fullName}</div>
-                <div className="text-sm text-zinc-400">
-                  {onlineUsers.includes(user._id) ? "Online" : "Offline"}
-                </div>
+              <div className="px-4 py-2 text-xs font-semibold text-zinc-400 uppercase">
+                Pinned
               </div>
             )}
-          </button>
-        ))}
+
+            {filteredPinnedUsers.map((user) => (
+              <SidebarUser
+                key={user._id}
+                user={user}
+                isOpen={isOpen}
+                selectedUser={selectedUser}
+                setSelectedUser={setSelectedUser}
+                onlineUsers={onlineUsers}
+              />
+            ))}
+          </>
+        )}
+
+        {/* Other users */}
+        {filteredOtherUsers.length > 0 && (
+          <>
+            {isOpen && (
+              <div className="px-4 py-2 text-xs font-semibold text-zinc-400 uppercase">
+                Others
+              </div>
+            )}
+
+            {filteredOtherUsers.map((user) => (
+              <SidebarUser
+                key={user._id}
+                user={user}
+                isOpen={isOpen}
+                selectedUser={selectedUser}
+                setSelectedUser={setSelectedUser}
+                onlineUsers={onlineUsers}
+              />
+            ))}
+          </>
+        )}
       </div>
     </aside>
   );

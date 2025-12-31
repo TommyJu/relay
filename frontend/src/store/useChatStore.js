@@ -11,12 +11,13 @@ export const useChatStore = create((set, get) => ({
   isUsersLoading: false,
   isMessagesLoading: false,
 
-  getUsers: async () => {
+  getSidebarUsers: async () => {
     set({ isUsersLoading: true });
 
     try {
-      const response = await chatService.fetchChatUsers();
-      set({ users: response.data });
+      const response = await chatService.fetchSidebarUsers();
+      set({ pinnedChatUsers: response.data.pinnedUsers });
+      set({ otherChatUsers: response.data.otherUsers });
     } catch (error) {
       handleToastErrorMessage(error);
     } finally {

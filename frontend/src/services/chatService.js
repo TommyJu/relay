@@ -1,8 +1,8 @@
 import { axiosInstance } from "../lib/axios";
 
 export const chatService = {
-  fetchChatUsers() {
-    return axiosInstance.get("/messages/users");
+  fetchSidebarUsers() {
+    return axiosInstance.get("/messages/users/sidebar");
   },
 
   fetchMessagesWithUser(receiverId) {
