@@ -13,13 +13,13 @@ export const getSidebarUsers = async (loggedInUserId) => {
 
   const pinnedUsers = await User.find({
     _id: { $in: loggedInUser.pinnedUsers }
-  }).select("-password"); // Omit password for security reasons
+  }).select("-password"); // Omit passwords for security reasons
 
   const otherUsers = await User.find({
     _id: {
       $nin: [...loggedInUser.pinnedUsers, loggedInUserId]
     }
-  }).select("-password");
+  }).select("-password"); // Omit passwords
 
   return { pinnedUsers, otherUsers };
 };
