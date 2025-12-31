@@ -1,6 +1,6 @@
 const SidebarUser = ({
   user,
-  isOpen,
+  isSidebarOpen,
   selectedUser,
   setSelectedUser,
   onlineUsers,
@@ -28,7 +28,7 @@ const SidebarUser = ({
         )}
       </div>
 
-      {isOpen && (
+      {isSidebarOpen && (
         <div className="text-left min-w-0">
           <div className="font-medium truncate">{user.fullName}</div>
           <div className="text-sm text-zinc-400">

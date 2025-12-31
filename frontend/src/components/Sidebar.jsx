@@ -5,7 +5,7 @@ import SidebarSkeleton from "./skeletons/SidebarSkeleton";
 import { Users, ChevronLeft, ChevronRight } from "lucide-react";
 import SidebarUser from "./SidebarUser";
 
-const Sidebar = ({ isOpen, onToggle }) => {
+const Sidebar = () => {
   const {
     getSidebarUsers,
     pinnedChatUsers,
@@ -15,20 +15,32 @@ const Sidebar = ({ isOpen, onToggle }) => {
     isUsersLoading,
   } = useChatStore();
   const { onlineUsers } = useAuthStore();
-
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [showOnlineOnly, setShowOnlineOnly] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     getSidebarUsers();
   }, [getSidebarUsers]);
+
+  const handleSidebarToggle = () => {
+    setIsSidebarOpen((prev) => !prev)
+    setSearchTerm("");
+  };
 
   const filterOnline = (users) =>
     showOnlineOnly
       ? users.filter((user) => onlineUsers.includes(user._id))
       : users;
 
-  const filteredPinnedUsers = filterOnline(pinnedChatUsers);
-  const filteredOtherUsers = filterOnline(otherChatUsers);
+  const filterBySearch = (users) => {
+    if (!searchTerm) return users;
+    const lower = searchTerm.toLowerCase();
+    return users.filter((user) => user.fullName.toLowerCase().includes(lower));
+  };
+
+  const filteredPinnedUsers = filterBySearch(filterOnline(pinnedChatUsers));
+  const filteredOtherUsers = filterBySearch(filterOnline(otherChatUsers));
 
   if (isUsersLoading) return <SidebarSkeleton />;
 
@@ -38,24 +50,33 @@ const Sidebar = ({ isOpen, onToggle }) => {
         absolute top-0 left-0 h-full z-30
         bg-base-100 border-r border-base-300
         transition-all duration-300 ease-in-out
-        ${isOpen ? "w-72" : "w-16"}
+        ${isSidebarOpen ? "w-72" : "w-16"}
       `}
     >
       {/* Header */}
       <div className="border-b border-base-300 px-2 py-4 flex items-center justify-between">
         <div className="flex items-center gap-2 overflow-hidden">
           <Users className="size-6 shrink-0" />
-          {isOpen && <span className="font-medium">Contacts</span>}
+          {isSidebarOpen && <span className="font-medium">Contacts</span>}
         </div>
 
-        <button onClick={onToggle} className="btn btn-ghost btn-sm">
-          {isOpen ? <ChevronLeft /> : <ChevronRight />}
+        <button onClick={handleSidebarToggle} className="btn btn-ghost btn-sm">
+          {isSidebarOpen ? <ChevronLeft /> : <ChevronRight />}
         </button>
       </div>
 
-      {/* Filters */}
-      {isOpen && (
-        <div className="p-4 border-b border-base-300">
+      {isSidebarOpen && (
+        <div className="p-4 border-b border-base-300 flex flex-col gap-2">
+          {/* Search input */}
+          <input
+            type="text"
+            placeholder="Search users..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="input input-sm w-full"
+          />
+
+          {/* Online only checkbox */}
           <label className="cursor-pointer flex items-center gap-2">
             <input
               type="checkbox"
@@ -65,18 +86,18 @@ const Sidebar = ({ isOpen, onToggle }) => {
             />
             <span className="text-sm whitespace-nowrap">Show online only</span>
           </label>
+
           <div className="text-xs text-zinc-500 mt-1">
             ({onlineUsers.length - 1} online)
           </div>
         </div>
       )}
-
       {/* User list */}
       <div className="overflow-y-auto py-2">
         {/* Pinned users */}
         {filteredPinnedUsers.length > 0 && (
           <>
-            {isOpen && (
+            {isSidebarOpen && (
               <div className="px-4 py-2 text-xs font-semibold text-zinc-400 uppercase">
                 Pinned
               </div>
@@ -86,7 +107,7 @@ const Sidebar = ({ isOpen, onToggle }) => {
               <SidebarUser
                 key={user._id}
                 user={user}
-                isOpen={isOpen}
+                isSidebarOpen={isSidebarOpen}
                 selectedUser={selectedUser}
                 setSelectedUser={setSelectedUser}
                 onlineUsers={onlineUsers}
@@ -102,18 +123,22 @@ const Sidebar = ({ isOpen, onToggle }) => {
         {/* Other users */}
         {filteredOtherUsers.length > 0 && (
           <>
-
             {filteredOtherUsers.map((user) => (
               <SidebarUser
                 key={user._id}
                 user={user}
-                isOpen={isOpen}
+                isSidebarOpen={isSidebarOpen}
                 selectedUser={selectedUser}
                 setSelectedUser={setSelectedUser}
                 onlineUsers={onlineUsers}
               />
             ))}
           </>
+        )}
+
+        {/* No users found */}
+        {(filteredOtherUsers.length === 0 && filteredPinnedUsers.length === 0) && (
+          <p className="text-center pt-40">No Users Found</p>
         )}
       </div>
     </aside>
