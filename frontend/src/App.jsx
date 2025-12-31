@@ -35,7 +35,7 @@ const App = () => {
   }
 
   return (
-    <div className="h-screen flex flex-col pt-16">
+    <div className="h-dvh flex flex-col pt-16">
       <Navbar />
 
       <Routes>
