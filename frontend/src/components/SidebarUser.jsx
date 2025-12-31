@@ -4,13 +4,17 @@ const SidebarUser = ({
   selectedUser,
   setSelectedUser,
   onlineUsers,
+  setIsSidebarOpen,
 }) => {
   const isOnline = onlineUsers.includes(user._id);
   const isSelected = selectedUser?._id === user._id;
 
   return (
     <button
-      onClick={() => setSelectedUser(user)}
+      onClick={() => {
+        setSelectedUser(user);
+        setIsSidebarOpen(false);
+      }}
       className={`
         w-full p-2 flex items-center gap-3
         hover:bg-base-300 transition-colors

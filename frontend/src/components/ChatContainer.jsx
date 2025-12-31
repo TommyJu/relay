@@ -3,10 +3,10 @@ import { useEffect, useRef } from "react";
 
 import ChatHeader from "./ChatHeader";
 import MessageInput from "./MessageInput";
-import MessageSkeleton from "./skeletons/MessageSkeleton";
 import { useAuthStore } from "../store/useAuthStore";
 import { formatMessageTime } from "../lib/utils";
 import NoMessages from "./NoMessages";
+import { Loader } from "lucide-react";
 
 const ChatContainer = () => {
   const {
@@ -37,16 +37,6 @@ const ChatContainer = () => {
       messageEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages]);
-
-  if (isMessagesLoading) {
-    return (
-      <div className="flex flex-col h-full w-full px-2">
-        <ChatHeader />
-        <MessageSkeleton />
-        <MessageInput />
-      </div>
-    );
-  }
 
   return (
     <div className="flex flex-col h-full w-full">
@@ -92,6 +82,12 @@ const ChatContainer = () => {
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {isMessagesLoading && (
+        <div className="flex justify-center py-2">
+          <Loader className="size-6 animate-spin opacity-50" />
         </div>
       )}
 

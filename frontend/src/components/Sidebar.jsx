@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useChatStore } from "../store/useChatStore";
 import { useAuthStore } from "../store/useAuthStore";
-import SidebarSkeleton from "./skeletons/SidebarSkeleton";
+import { Loader } from "lucide-react";
 import { Users, ChevronLeft, ChevronRight } from "lucide-react";
 import SidebarUser from "./SidebarUser";
 
@@ -15,7 +15,7 @@ const Sidebar = () => {
     isUsersLoading,
   } = useChatStore();
   const { onlineUsers } = useAuthStore();
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [showOnlineOnly, setShowOnlineOnly] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -24,7 +24,7 @@ const Sidebar = () => {
   }, [getSidebarUsers]);
 
   const handleSidebarToggle = () => {
-    setIsSidebarOpen((prev) => !prev)
+    setIsSidebarOpen((prev) => !prev);
     setSearchTerm("");
   };
 
@@ -41,8 +41,6 @@ const Sidebar = () => {
 
   const filteredPinnedUsers = filterBySearch(filterOnline(pinnedChatUsers));
   const filteredOtherUsers = filterBySearch(filterOnline(otherChatUsers));
-
-  if (isUsersLoading) return <SidebarSkeleton />;
 
   return (
     <aside
@@ -111,6 +109,7 @@ const Sidebar = () => {
                 selectedUser={selectedUser}
                 setSelectedUser={setSelectedUser}
                 onlineUsers={onlineUsers}
+                setIsSidebarOpen={setIsSidebarOpen}
               />
             ))}
             {/* Sidebar Divider */}
@@ -131,14 +130,22 @@ const Sidebar = () => {
                 selectedUser={selectedUser}
                 setSelectedUser={setSelectedUser}
                 onlineUsers={onlineUsers}
+                setIsSidebarOpen={setIsSidebarOpen}
               />
             ))}
           </>
         )}
 
         {/* No users found */}
-        {(filteredOtherUsers.length === 0 && filteredPinnedUsers.length === 0) && (
-          <p className="text-center pt-40">No Users Found</p>
+        {filteredOtherUsers.length === 0 &&
+          filteredPinnedUsers.length === 0 && (
+            <p className="text-center pt-40">No Users Found</p>
+          )}
+
+        {isUsersLoading && (
+          <div className="flex justify-center py-2">
+            <Loader className="size-6 animate-spin opacity-50" />
+          </div>
         )}
       </div>
     </aside>
