@@ -92,6 +92,10 @@ const Sidebar = ({ isOpen, onToggle }) => {
                 onlineUsers={onlineUsers}
               />
             ))}
+            {/* Sidebar Divider */}
+            <div className="py-2">
+              <div className="border-t border-base-300" />
+            </div>
           </>
         )}
 

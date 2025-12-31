@@ -1,9 +1,27 @@
 import { useAuthStore } from "../store/useAuthStore";
 import { useChatStore } from "../store/useChatStore";
+import {Pin, PinOff} from "lucide-react";
 
 const ChatHeader = () => {
-  const { selectedUser } = useChatStore();
+  const {
+    selectedUser,
+    pinnedChatUsers,
+    pinUser,
+    unpinUser,
+  } = useChatStore();
   const { onlineUsers } = useAuthStore();
+
+  const isPinned = pinnedChatUsers.some(
+  (user) => user._id === selectedUser?._id
+);
+
+const handleTogglePin = () => {
+    if (isPinned) {
+      unpinUser(selectedUser._id);
+    } else {
+      pinUser(selectedUser._id);
+    }
+  };
 
   return (
     <div className="p-2.5 border-b border-base-300">
@@ -23,6 +41,15 @@ const ChatHeader = () => {
               {onlineUsers.includes(selectedUser._id) ? "Online" : "Offline"}
             </p>
           </div>
+          {/* Pin user button */}
+          {/* Pin / Unpin */}
+        <button
+          onClick={handleTogglePin}
+          className="btn btn-ghost btn-sm"
+          title={isPinned ? "Unpin user" : "Pin user"}
+        >
+          {isPinned ? <PinOff size={18} /> : <Pin size={18} />}
+        </button>
         </div>
       </div>
     </div>

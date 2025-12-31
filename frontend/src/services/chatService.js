@@ -14,4 +14,12 @@ export const chatService = {
     return axiosInstance.post(`/messages/send/${receiverId}`, messageData);
   },
 
+  pinUser(userToAddId) {
+    return axiosInstance.put(`/messages/users/pin-user/${userToAddId}`);
+  },
+
+  unpinUser(userToRemoveId) {
+    return axiosInstance.delete(`/messages/users/unpin-user/${userToRemoveId}`);
+  },
+
 };
