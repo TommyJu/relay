@@ -41,7 +41,7 @@ const ChatContainer = () => {
   return (
     <div className="flex flex-col h-full w-full">
       <ChatHeader />
-      {messages.length === 0 ? (
+      {(messages.length === 0 && !isMessagesLoading) ? (
         <NoMessages />
       ) : (
         <div className="flex-1 p-4 space-y-2 overflow-y-scroll overflow-x-hidden">
