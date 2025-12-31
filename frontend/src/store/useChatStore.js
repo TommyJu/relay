@@ -5,7 +5,8 @@ import { handleToastErrorMessage } from "../lib/utils";
 
 export const useChatStore = create((set, get) => ({
   messages: [],
-  users: [],
+  pinnedChatUsers: [],
+  otherChatUsers: [],
   selectedUser: null,
   isUsersLoading: false,
   isMessagesLoading: false,

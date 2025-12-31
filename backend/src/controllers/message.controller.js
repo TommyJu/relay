@@ -1,6 +1,6 @@
 import { sendErrorResponse } from "../utils/errorHandling.js";
 import {
-  getOtherUsers,
+  getSidebarUsers,
   findMessagesSentAndReceived,
   uploadChatImage,
   createAndSaveMessage,
@@ -12,8 +12,8 @@ import {
 export const getUsersForSidebar = async (req, res) => {
   try {
     const loggedInUserId = req.user._id;
-    const otherUsers = await getOtherUsers(loggedInUserId);
-    res.status(200).json(otherUsers);
+    const sidebarUsers = await getSidebarUsers(loggedInUserId);
+    res.status(200).json(sidebarUsers);
   } catch (error) {
     sendErrorResponse(res, error, "message controller get users for sidebar");
   }

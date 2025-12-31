@@ -11,7 +11,7 @@ import {
 
 const router = express.Router();
 
-router.get("/users", protectRoute, getUsersForSidebar);
+router.get("/users/sidebar", protectRoute, getUsersForSidebar);
 router.get("/:receiverId", protectRoute, getMessages);
 router.post("/send/:receiverId", protectRoute, sendMessage);
 router.put("/users/pin-user/:userToAddId", protectRoute, pinUserToSidebar);

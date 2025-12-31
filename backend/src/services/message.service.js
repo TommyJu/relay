@@ -6,8 +6,21 @@ import { io } from "../lib/socket.js";
 import { throwError } from "../utils/errorHandling.js";
 import { MAX_MESSAGE_LENGTH } from "../../../shared/message.constants.js";
 
-export const getOtherUsers = async (loggedInUserId) => {
-  return await User.find({ _id: { $ne: loggedInUserId } }).select("-password"); // Omit password from retrieved user data
+export const getSidebarUsers = async (loggedInUserId) => {
+  const loggedInUser = await User.findById(loggedInUserId)
+    .select("pinnedUsers");
+
+  const pinnedUsers = await User.find({
+    _id: { $in: loggedInUser.pinnedUsers }
+  }).select("-password"); // Omit password for security reasons
+
+  const otherUsers = await User.find({
+    _id: {
+      $nin: [...loggedInUser.pinnedUsers, loggedInUserId]
+    }
+  }).select("-password");
+
+  return { pinnedUsers, otherUsers };
 };
 
 export const addToPinnedUsers = async (loggedInUserId, userToAddId) => {
