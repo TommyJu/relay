@@ -5,7 +5,8 @@ import {
   getMessages,
   sendMessage,
   pinUserToSidebar,
-  unpinUserFromSidebar
+  unpinUserFromSidebar,
+  getConversation
 } from "../controllers/message.controller.js";
 
 
@@ -16,5 +17,6 @@ router.get("/:receiverId", protectRoute, getMessages);
 router.post("/send/:receiverId", protectRoute, sendMessage);
 router.put("/users/pin-user/:userToAddId", protectRoute, pinUserToSidebar);
 router.delete("/users/unpin-user/:userToRemoveId", protectRoute, unpinUserFromSidebar);
+router.post("/conversation/:otherUserId", protectRoute, getConversation)
 
 export default router;

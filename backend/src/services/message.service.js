@@ -6,6 +6,7 @@ import { io } from "../lib/socket.js";
 import { throwError } from "../utils/errorHandling.js";
 import { MAX_MESSAGE_LENGTH } from "../../../shared/message.constants.js";
 import mongoose from "mongoose";
+import Conversation from "../models/conversation.model.js";
 
 export const getSidebarUsers = async (loggedInUserId) => {
   const loggedInUser = await User.findById(loggedInUserId)
@@ -93,4 +94,27 @@ export const emitNewMessageEvent = (receiverId, newMessage) => {
   if (receiverSocketId) {
     io.to(receiverSocketId).emit("newMessage", newMessage);
   }
+};
+
+export const findOrCreateChatConversation = async (userId, otherUserId) => {
+  if (!otherUserId) {
+    throwError("Other user ID is required", 400)
+  }
+  
+  let conversation = await Conversation.findOne({
+    participants: { $all: [userId, otherUserId]}
+  });
+
+  if (!conversation) {
+    conversation = await Conversation.create({
+      participants: [userId, otherUserId],
+      // A conversation is initiated by sending a new message to the other user
+      read: {
+        [userId]: true,
+        [otherUserId]: false
+      }
+    });
+  }
+
+  return conversation;
 };

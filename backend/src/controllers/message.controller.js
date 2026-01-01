@@ -7,6 +7,7 @@ import {
   emitNewMessageEvent,
   removeFromPinnedUsers,
   addToPinnedUsers,
+  findOrCreateChatConversation
 } from "../services/message.service.js";
 
 export const getUsersForSidebar = async (req, res) => {
@@ -79,5 +80,17 @@ export const sendMessage = async (req, res) => {
     res.status(201).json(newMessage);
   } catch (error) {
     sendErrorResponse(res, error, "message controller send message");
+  }
+};
+
+export const getConversation = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const { otherUserId } = req.params;
+
+    const conversation = await findOrCreateChatConversation(userId, otherUserId);
+    res.status(200).json(conversation);
+  } catch (error) {
+    sendErrorResponse(res, error, "message controller get conversation");
   }
 };
