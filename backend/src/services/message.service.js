@@ -118,3 +118,10 @@ export const findOrCreateChatConversation = async (userId, otherUserId) => {
 
   return conversation;
 };
+
+export const markConversationAsReadForUser = async (conversationId, userId) => {
+  return await Conversation.updateOne(
+    {_id: conversationId },
+    { $set: { [`read.${userId}`]: true}}
+  );
+};

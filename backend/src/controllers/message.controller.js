@@ -7,7 +7,8 @@ import {
   emitNewMessageEvent,
   removeFromPinnedUsers,
   addToPinnedUsers,
-  findOrCreateChatConversation
+  findOrCreateChatConversation,
+  markConversationAsReadForUser
 } from "../services/message.service.js";
 
 export const getUsersForSidebar = async (req, res) => {
@@ -92,5 +93,16 @@ export const getConversation = async (req, res) => {
     res.status(200).json(conversation);
   } catch (error) {
     sendErrorResponse(res, error, "message controller get conversation");
+  }
+};
+
+export const markConversationAsRead = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const { conversationId } = req.params;
+    let conversation = await markConversationAsReadForUser(conversationId, userId);
+    res.status(200).json(conversation);
+  } catch (error) {
+    sendErrorResponse(res, error, "message controller mark conversation as read");
   }
 };
