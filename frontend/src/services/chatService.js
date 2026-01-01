@@ -6,7 +6,7 @@ export const chatService = {
   },
 
   fetchMessagesWithUser(receiverId) {
-    return axiosInstance.get(`/messages/${receiverId}`);
+    return axiosInstance.get(`/messages/chat/${receiverId}`);
   },
 
 

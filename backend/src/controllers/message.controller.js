@@ -8,7 +8,8 @@ import {
   removeFromPinnedUsers,
   addToPinnedUsers,
   findOrCreateChatConversation,
-  markConversationAsReadForUser
+  markConversationAsReadForUser,
+  updateConversationStateOnMessageSend
 } from "../services/message.service.js";
 
 export const getUsersForSidebar = async (req, res) => {
@@ -67,8 +68,11 @@ export const sendMessage = async (req, res) => {
     const { receiverId } = req.params;
     const senderId = req.user._id;
 
+    const conversation = await findOrCreateChatConversation(senderId, receiverId);
+    await updateConversationStateOnMessageSend(conversation._id, senderId, receiverId);
+
     // Image uploads are optional
-    let imageURL = (await uploadChatImage(image)) || "";
+    const imageURL = (await uploadChatImage(image)) || "";
 
     const newMessage = await createAndSaveMessage(
       senderId,
@@ -77,8 +81,9 @@ export const sendMessage = async (req, res) => {
       imageURL
     );
 
-    emitNewMessageEvent(receiverId, newMessage);
-    res.status(201).json(newMessage);
+    emitNewMessageEvent(receiverId, newMessage, conversation._id);
+    // Conversation ID 
+    res.status(201).json({newMessage, conversationId: conversation._id});
   } catch (error) {
     sendErrorResponse(res, error, "message controller send message");
   }

@@ -65,6 +65,18 @@ export const uploadChatImage = async (image) => {
   }
 };
 
+export const updateConversationStateOnMessageSend = async (conversationId, senderId, receiverId) => {
+  await Conversation.updateOne(
+    { _id: conversationId },
+    {
+      $set: {
+        [`read.${senderId}`]: true,
+        [`read.${receiverId}`]: false,
+      },
+    }
+  );
+};
+
 export const createAndSaveMessage = async (
   senderId,
   receiverId,
@@ -89,10 +101,10 @@ export const createAndSaveMessage = async (
   return newMessage;
 };
 
-export const emitNewMessageEvent = (receiverId, newMessage) => {
+export const emitNewMessageEvent = (receiverId, newMessage, conversationId) => {
   const receiverSocketId = getSocketIdFromUserId(receiverId);
   if (receiverSocketId) {
-    io.to(receiverSocketId).emit("newMessage", newMessage);
+    io.to(receiverSocketId).emit("newMessage", { newMessage, conversationId });
   }
 };
 
