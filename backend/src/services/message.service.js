@@ -9,20 +9,21 @@ import mongoose from "mongoose";
 import Conversation from "../models/conversation.model.js";
 
 export const getSidebarUsers = async (loggedInUserId) => {
-  const loggedInUser = await User.findById(loggedInUserId)
-    .select("pinnedUsers");
+  const loggedInUser = await User.findById(loggedInUserId).select(
+    "pinnedUsers"
+  );
 
   const pinnedUsers = await User.find({
-    _id: { $in: loggedInUser.pinnedUsers }
+    _id: { $in: loggedInUser.pinnedUsers },
   }).select("-password"); // Omit passwords for security reasons
 
   const otherUsers = await User.find({
     _id: {
-      $nin: [...loggedInUser.pinnedUsers, loggedInUserId]
-    }
+      $nin: [...loggedInUser.pinnedUsers, loggedInUserId],
+    },
   }).select("-password"); // Omit passwords
 
-  return { pinnedUsers, otherUsers };
+  return { pinnedUsers, otherUsers};
 };
 
 export const addToPinnedUsers = async (loggedInUserId, userToAddId) => {
@@ -33,7 +34,7 @@ export const addToPinnedUsers = async (loggedInUserId, userToAddId) => {
   if (loggedInUserId.equals(userToAddId)) {
     throwError("You cannot pin yourself", 400);
   }
-  
+
   return await User.findByIdAndUpdate(
     loggedInUserId,
     { $addToSet: { pinnedUsers: userToAddId } },
@@ -65,7 +66,11 @@ export const uploadChatImage = async (image) => {
   }
 };
 
-export const updateConversationStateOnMessageSend = async (conversationId, senderId, receiverId) => {
+export const updateConversationStateOnMessageSend = async (
+  conversationId,
+  senderId,
+  receiverId
+) => {
   await Conversation.updateOne(
     { _id: conversationId },
     {
@@ -110,21 +115,20 @@ export const emitNewMessageEvent = (receiverId, newMessage, conversationId) => {
 
 export const findOrCreateChatConversation = async (userId, otherUserId) => {
   if (!otherUserId) {
-    throwError("Other user ID is required", 400)
+    throwError("Other user ID is required", 400);
   }
-  
+
   let conversation = await Conversation.findOne({
-    participants: { $all: [userId, otherUserId]}
+    participants: { $all: [userId, otherUserId] },
   });
 
   if (!conversation) {
     conversation = await Conversation.create({
       participants: [userId, otherUserId],
-      // A conversation is initiated by sending a new message to the other user
       read: {
         [userId]: true,
-        [otherUserId]: false
-      }
+        [otherUserId]: false,
+      },
     });
   }
 
@@ -133,7 +137,31 @@ export const findOrCreateChatConversation = async (userId, otherUserId) => {
 
 export const markConversationAsReadForUser = async (conversationId, userId) => {
   return await Conversation.updateOne(
-    {_id: conversationId },
-    { $set: { [`read.${userId}`]: true}}
+    { _id: conversationId },
+    { $set: { [`read.${userId}`]: true } }
   );
 };
+
+export const getUnreadConversationsForUser = async (currentUserId) => {
+  const conversations = await Conversation.find({
+    participants: { $in: [currentUserId] },
+    $or: [
+      { [`read.${currentUserId}`]: false },
+      { [`read.${currentUserId}`]: { $exists: false } }
+    ]
+  }).lean();
+
+  const result = {};
+
+  conversations.forEach((conversation) => {
+    const otherUserId = conversation.participants.find(
+      (id) => id.toString() !== currentUserId.toString()
+    );
+    if (otherUserId) {
+      result[otherUserId.toString()] = conversation._id.toString();
+    }
+  });
+
+  return result;
+};
+

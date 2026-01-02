@@ -22,4 +22,15 @@ export const chatService = {
     return axiosInstance.delete(`/messages/users/unpin-user/${userToRemoveId}`);
   },
 
+  getConversation(otherUserId) {
+    return axiosInstance.post(`/messages/conversation/get/${otherUserId}`);
+  },
+
+  markConversationAsRead(conversationId) {
+    return axiosInstance.put(`/messages/conversation/mark-as-read/${conversationId}`);
+  },
+
+  getUnreadConversationsForUser() {
+    return axiosInstance.get("/messages/conversation/get-unread");
+  },
 };

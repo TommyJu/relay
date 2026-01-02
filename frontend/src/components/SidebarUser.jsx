@@ -1,3 +1,5 @@
+import { useChatStore } from "../store/useChatStore";
+
 const SidebarUser = ({
   user,
   isSidebarOpen,
@@ -8,6 +10,8 @@ const SidebarUser = ({
 }) => {
   const isOnline = onlineUsers.includes(user._id);
   const isSelected = selectedUser?._id === user._id;
+  const { unreadConversations } = useChatStore();
+  let isMessageFromSidebarUserUnread = user._id in unreadConversations;
 
   return (
     <button
@@ -21,11 +25,14 @@ const SidebarUser = ({
         ${isSelected ? "bg-base-300" : ""}
       `}
     >
-      <div className="relative">
+      <div className={`relative`}>
         <img
           src={user.profilePic || "/avatar.png"}
           alt={user.fullName}
-          className="size-12 object-cover rounded-full"
+          className={`
+            size-12 object-cover rounded-full
+            ${isMessageFromSidebarUserUnread ? "border-4 border-accent" : ""}
+          `}
         />
         {isOnline && (
           <span className="absolute bottom-0 right-0 size-3 bg-green-500 rounded-full ring-2 ring-base-100" />

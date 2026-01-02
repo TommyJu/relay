@@ -7,7 +7,8 @@ import {
   pinUserToSidebar,
   unpinUserFromSidebar,
   getConversation,
-  markConversationAsRead
+  markConversationAsRead,
+  getUnreadConversations,
 } from "../controllers/message.controller.js";
 
 
@@ -20,7 +21,8 @@ router.delete("/users/unpin-user/:userToRemoveId", protectRoute, unpinUserFromSi
 router.get("/chat/:receiverId", protectRoute, getMessages);
 router.post("/send/:receiverId", protectRoute, sendMessage);
 
-router.post("/conversation/:otherUserId", protectRoute, getConversation);
-router.put("/conversation/mark-as-read/:conversationId", protectRoute, markConversationAsRead)
+router.post("/conversation/get/:otherUserId", protectRoute, getConversation);
+router.put("/conversation/mark-as-read/:conversationId", protectRoute, markConversationAsRead);
+router.get("/conversation/get-unread", protectRoute, getUnreadConversations);
 
 export default router;

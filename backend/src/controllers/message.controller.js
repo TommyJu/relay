@@ -9,7 +9,8 @@ import {
   addToPinnedUsers,
   findOrCreateChatConversation,
   markConversationAsReadForUser,
-  updateConversationStateOnMessageSend
+  updateConversationStateOnMessageSend,
+  getUnreadConversationsForUser
 } from "../services/message.service.js";
 
 export const getUsersForSidebar = async (req, res) => {
@@ -109,5 +110,15 @@ export const markConversationAsRead = async (req, res) => {
     res.status(200).json(conversation);
   } catch (error) {
     sendErrorResponse(res, error, "message controller mark conversation as read");
+  }
+};
+
+export const getUnreadConversations = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    let unreadConversations = await getUnreadConversationsForUser(userId);
+    res.status(200).json(unreadConversations);
+  } catch (error) {
+    sendErrorResponse(res, error, "message controller get unread conversations for user");
   }
 };

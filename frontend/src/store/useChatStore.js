@@ -11,6 +11,24 @@ export const useChatStore = create((set, get) => ({
   selectedUser: null,
   isUsersLoading: false,
   isMessagesLoading: false,
+  isConversationsLoading: false,
+  currentConversationId: null,
+  unreadConversations: {}, // [otherUserId]: conversationId
+
+  getUnreadConversationsForUser: async () => {
+    try {
+      set({ isConversationsLoading: true });
+      const response =
+        await chatService.getUnreadConversationsForUser();
+      // Create a new object so new message notification updates
+        set({ unreadConversations: { ...response.data } });
+
+    } catch (error) {
+      handleToastErrorMessage(error);
+    } finally {
+      set({ isConversationsLoading: false });
+    }
+  },
 
   getSidebarUsers: async () => {
     set({ isUsersLoading: true });
@@ -75,19 +93,6 @@ export const useChatStore = create((set, get) => ({
     }
   },
 
-  getMessages: async (receiverId) => {
-    set({ isMessagesLoading: true });
-
-    try {
-      const response = await chatService.fetchMessagesWithUser(receiverId);
-      set({ messages: response.data });
-    } catch (error) {
-      handleToastErrorMessage(error);
-    } finally {
-      set({ isMessagesLoading: false });
-    }
-  },
-
   sendMessage: async (messageData) => {
     const { selectedUser, messages } = get();
     try {
@@ -95,26 +100,27 @@ export const useChatStore = create((set, get) => ({
         selectedUser._id,
         messageData
       );
-      set({ messages: [...messages, response.data] });
+      set({ messages: [...messages, response.data.newMessage] });
     } catch (error) {
       handleToastErrorMessage(error);
     }
   },
 
   subscribeToMessages: () => {
-    const { selectedUser } = get();
-    if (!selectedUser) return;
-
     const socket = useAuthStore.getState().socket;
-    socket.on("newMessage", (newMessage) => {
+    socket.on("newMessage", ({ newMessage, conversationId }) => {
+      const { currentConversationId } = get();
       // Limits incoming messages to the currently selected user only
-      const isMessageFromSelectedUser =
-        selectedUser._id === newMessage.senderId;
-      if (!isMessageFromSelectedUser) return;
-
-      set({
-        messages: [...get().messages, newMessage],
-      });
+      if (conversationId === currentConversationId) {
+        set((state) => ({ messages: [...state.messages, newMessage] }));
+      } else {
+        set((state) => ({
+          unreadConversations: {
+            ...state.unreadConversations,
+            [newMessage.senderId]: conversationId,
+          },
+        }));
+      }
     });
   },
 
@@ -123,7 +129,33 @@ export const useChatStore = create((set, get) => ({
     socket.off("newMessage");
   },
 
-  setSelectedUser: (newSelectedUser) => {
-    set({ selectedUser: newSelectedUser });
+  setSelectedUser: async (newSelectedUser) => {
+    set({ selectedUser: newSelectedUser, isMessagesLoading: true });
+
+    try {
+      // Update current conversation Id
+      const convoRes = await chatService.getConversation(newSelectedUser._id);
+      const conversationId = convoRes.data._id;
+      set({ currentConversationId: conversationId });
+
+      // Retrieve messages
+      const messagesRes = await chatService.fetchMessagesWithUser(
+        newSelectedUser._id
+      );
+      set({ messages: messagesRes.data });
+
+      // Remove the unread conversation locally
+      set((state) => {
+        const updatedUnread = { ...state.unreadConversations };
+        delete updatedUnread[get().selectedUser._id];
+        return { unreadConversations: updatedUnread };
+      });
+      // Mark the conversation as read in the backend
+      await chatService.markConversationAsRead(conversationId);
+    } catch (error) {
+      handleToastErrorMessage(error);
+    } finally {
+      set({ isMessagesLoading: false });
+    }
   },
 }));
