@@ -10,8 +10,8 @@ const SidebarUser = ({
 }) => {
   const isOnline = onlineUsers.includes(user._id);
   const isSelected = selectedUser?._id === user._id;
-  const { unreadConversations } = useChatStore();
-  let isMessageFromSidebarUserUnread = user._id in unreadConversations;
+  const { unreadUserIds } = useChatStore();
+  let isMessageFromSidebarUserUnread = unreadUserIds.includes(user._id.toString());
 
   return (
     <button

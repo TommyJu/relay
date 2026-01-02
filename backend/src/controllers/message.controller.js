@@ -10,7 +10,7 @@ import {
   findOrCreateChatConversation,
   markConversationAsReadForUser,
   updateConversationStateOnMessageSend,
-  getUnreadConversationsForUser
+  getUnreadUserIdsForUser
 } from "../services/message.service.js";
 
 export const getUsersForSidebar = async (req, res) => {
@@ -113,12 +113,12 @@ export const markConversationAsRead = async (req, res) => {
   }
 };
 
-export const getUnreadConversations = async (req, res) => {
+export const getUnreadUserIds = async (req, res) => {
   try {
     const userId = req.user._id;
-    let unreadConversations = await getUnreadConversationsForUser(userId);
-    res.status(200).json(unreadConversations);
+    let unreadUserIds = await getUnreadUserIdsForUser(userId);
+    res.status(200).json(unreadUserIds);
   } catch (error) {
-    sendErrorResponse(res, error, "message controller get unread conversations for user");
+    sendErrorResponse(res, error, "message controller get unread user IDs");
   }
 };

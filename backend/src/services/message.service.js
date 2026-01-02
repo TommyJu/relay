@@ -142,7 +142,7 @@ export const markConversationAsReadForUser = async (conversationId, userId) => {
   );
 };
 
-export const getUnreadConversationsForUser = async (currentUserId) => {
+export const getUnreadUserIdsForUser = async (currentUserId) => {
   const conversations = await Conversation.find({
     participants: { $in: [currentUserId] },
     $or: [
@@ -151,14 +151,14 @@ export const getUnreadConversationsForUser = async (currentUserId) => {
     ]
   }).lean();
 
-  const result = {};
+  const result = [];
 
   conversations.forEach((conversation) => {
     const otherUserId = conversation.participants.find(
       (id) => id.toString() !== currentUserId.toString()
     );
     if (otherUserId) {
-      result[otherUserId.toString()] = conversation._id.toString();
+      result.push(otherUserId.toString());
     }
   });
 

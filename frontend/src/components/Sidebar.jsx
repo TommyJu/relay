@@ -14,7 +14,7 @@ const Sidebar = () => {
     setSelectedUser,
     isUsersLoading,
     isConversationsLoading,
-    getUnreadConversationsForUser
+    getUnreadUserIds
 
   } = useChatStore();
 
@@ -25,8 +25,8 @@ const Sidebar = () => {
 
   useEffect(() => {
     getSidebarUsers();
-    getUnreadConversationsForUser();
-  }, [getSidebarUsers, getUnreadConversationsForUser]);
+    getUnreadUserIds();
+  }, [getSidebarUsers, getUnreadUserIds]);
 
   const handleSidebarToggle = () => {
     setIsSidebarOpen((prev) => !prev);

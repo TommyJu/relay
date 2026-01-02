@@ -8,7 +8,7 @@ import {
   unpinUserFromSidebar,
   getConversation,
   markConversationAsRead,
-  getUnreadConversations,
+  getUnreadUserIds,
 } from "../controllers/message.controller.js";
 
 
@@ -23,6 +23,6 @@ router.post("/send/:receiverId", protectRoute, sendMessage);
 
 router.post("/conversation/get/:otherUserId", protectRoute, getConversation);
 router.put("/conversation/mark-as-read/:conversationId", protectRoute, markConversationAsRead);
-router.get("/conversation/get-unread", protectRoute, getUnreadConversations);
+router.get("/conversation/get-unread", protectRoute, getUnreadUserIds);
 
 export default router;

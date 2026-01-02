@@ -30,7 +30,7 @@ export const chatService = {
     return axiosInstance.put(`/messages/conversation/mark-as-read/${conversationId}`);
   },
 
-  getUnreadConversationsForUser() {
+  getUnreadUserIds() {
     return axiosInstance.get("/messages/conversation/get-unread");
   },
 };

@@ -13,16 +13,14 @@ export const useChatStore = create((set, get) => ({
   isMessagesLoading: false,
   isConversationsLoading: false,
   currentConversationId: null,
-  unreadConversations: {}, // [otherUserId]: conversationId
+  unreadUserIds: [],
 
-  getUnreadConversationsForUser: async () => {
+  getUnreadUserIds: async () => {
     try {
       set({ isConversationsLoading: true });
-      const response =
-        await chatService.getUnreadConversationsForUser();
+      const response = await chatService.getUnreadUserIds();
       // Create a new object so new message notification updates
-        set({ unreadConversations: { ...response.data } });
-
+      set({ unreadUserIds: response.data || [] });
     } catch (error) {
       handleToastErrorMessage(error);
     } finally {
@@ -114,11 +112,11 @@ export const useChatStore = create((set, get) => ({
       if (conversationId === currentConversationId) {
         set((state) => ({ messages: [...state.messages, newMessage] }));
       } else {
+        // Add sender ID to unreadUserIds for new message notifications
         set((state) => ({
-          unreadConversations: {
-            ...state.unreadConversations,
-            [newMessage.senderId]: conversationId,
-          },
+          unreadUserIds: state.unreadUserIds.includes(newMessage.senderId)
+            ? state.unreadUserIds
+            : [...state.unreadUserIds, newMessage.senderId],
         }));
       }
     });
@@ -145,11 +143,11 @@ export const useChatStore = create((set, get) => ({
       set({ messages: messagesRes.data });
 
       // Remove the unread conversation locally
-      set((state) => {
-        const updatedUnread = { ...state.unreadConversations };
-        delete updatedUnread[get().selectedUser._id];
-        return { unreadConversations: updatedUnread };
-      });
+      set((state) => ({
+        unreadUserIds: state.unreadUserIds.filter(
+          (id) => id !== newSelectedUser._id
+        ),
+      }));
       // Mark the conversation as read in the backend
       await chatService.markConversationAsRead(conversationId);
     } catch (error) {
