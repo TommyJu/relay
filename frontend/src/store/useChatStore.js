@@ -11,19 +11,14 @@ export const useChatStore = create((set, get) => ({
   selectedUser: null,
   isUsersLoading: false,
   isMessagesLoading: false,
-  isConversationsLoading: false,
-  currentConversationId: null,
   unreadUserIds: new Set(),
 
   getUnreadUserIds: async () => {
     try {
-      set({ isConversationsLoading: true });
       const response = await chatService.getUnreadUserIds();
       set({ unreadUserIds: new Set(response.data || []) });
     } catch (error) {
       handleToastErrorMessage(error);
-    } finally {
-      set({ isConversationsLoading: false });
     }
   },
 
@@ -31,6 +26,9 @@ export const useChatStore = create((set, get) => ({
     set({ isUsersLoading: true });
 
     try {
+      // Load new message notifications along with sidebar users
+      await get().getUnreadUserIds();
+
       const response = await chatService.fetchSidebarUsers();
       set({ pinnedChatUsers: response.data.pinnedUsers });
       set({ otherChatUsers: response.data.otherUsers });
@@ -105,12 +103,11 @@ export const useChatStore = create((set, get) => ({
 
   subscribeToMessages: () => {
     const socket = useAuthStore.getState().socket;
-    socket.on("newMessage", ({ newMessage, conversationId }) => {
-      const { currentConversationId } = get();
+    socket.on("newMessage", ({ newMessage }) => {
       // Limits incoming messages to the currently selected user only
-      let isNewMessageFromCurrentConversation =
-        conversationId === currentConversationId;
-      if (isNewMessageFromCurrentConversation) {
+      let isNewMessageFromSelectedUser =
+        newMessage.senderId === get().selectedUser?._id;
+      if (isNewMessageFromSelectedUser) {
         set((state) => ({ messages: [...state.messages, newMessage] }));
       } else {
         // Add sender ID to unreadUserIds for new message notifications
@@ -135,7 +132,6 @@ export const useChatStore = create((set, get) => ({
       // Update current conversation Id
       const convoRes = await chatService.getConversation(newSelectedUser._id);
       const conversationId = convoRes.data._id;
-      set({ currentConversationId: conversationId });
 
       // Retrieve messages
       const messagesRes = await chatService.fetchMessagesWithUser(

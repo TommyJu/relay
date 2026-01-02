@@ -13,8 +13,6 @@ const Sidebar = () => {
     selectedUser,
     setSelectedUser,
     isUsersLoading,
-    isConversationsLoading,
-    getUnreadUserIds
 
   } = useChatStore();
 
@@ -25,8 +23,7 @@ const Sidebar = () => {
 
   useEffect(() => {
     getSidebarUsers();
-    getUnreadUserIds();
-  }, [getSidebarUsers, getUnreadUserIds]);
+  }, [getSidebarUsers]);
 
   const handleSidebarToggle = () => {
     setIsSidebarOpen((prev) => !prev);
@@ -147,7 +144,7 @@ const Sidebar = () => {
             <p className="text-center pt-40">No Users Found</p>
           )}
 
-        {(isUsersLoading || isConversationsLoading) && (
+        {(isUsersLoading) && (
           <div className="flex justify-center py-2">
             <Loader className="size-6 animate-spin opacity-50" />
           </div>

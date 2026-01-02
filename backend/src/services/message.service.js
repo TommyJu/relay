@@ -106,10 +106,10 @@ export const createAndSaveMessage = async (
   return newMessage;
 };
 
-export const emitNewMessageEvent = (receiverId, newMessage, conversationId) => {
+export const emitNewMessageEvent = (receiverId, newMessage) => {
   const receiverSocketId = getSocketIdFromUserId(receiverId);
   if (receiverSocketId) {
-    io.to(receiverSocketId).emit("newMessage", { newMessage, conversationId });
+    io.to(receiverSocketId).emit("newMessage", { newMessage });
   }
 };
 

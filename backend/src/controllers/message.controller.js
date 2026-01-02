@@ -69,9 +69,6 @@ export const sendMessage = async (req, res) => {
     const { receiverId } = req.params;
     const senderId = req.user._id;
 
-    const conversation = await findOrCreateChatConversation(senderId, receiverId);
-    await updateConversationStateOnMessageSend(conversation._id, senderId, receiverId);
-
     // Image uploads are optional
     const imageURL = (await uploadChatImage(image)) || "";
 
@@ -82,9 +79,12 @@ export const sendMessage = async (req, res) => {
       imageURL
     );
 
-    emitNewMessageEvent(receiverId, newMessage, conversation._id);
-    // Conversation ID 
-    res.status(201).json({newMessage, conversationId: conversation._id});
+    // Update conversation meta data for new message notifications for the recipient
+    const conversation = await findOrCreateChatConversation(senderId, receiverId);
+    await updateConversationStateOnMessageSend(conversation._id, senderId, receiverId);
+    
+    emitNewMessageEvent(receiverId, newMessage);
+    res.status(201).json({ newMessage });
   } catch (error) {
     sendErrorResponse(res, error, "message controller send message");
   }
