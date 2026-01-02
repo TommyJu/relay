@@ -13,14 +13,13 @@ export const useChatStore = create((set, get) => ({
   isMessagesLoading: false,
   isConversationsLoading: false,
   currentConversationId: null,
-  unreadUserIds: [],
+  unreadUserIds: new Set(),
 
   getUnreadUserIds: async () => {
     try {
       set({ isConversationsLoading: true });
       const response = await chatService.getUnreadUserIds();
-      // Create a new object so new message notification updates
-      set({ unreadUserIds: response.data || [] });
+      set({ unreadUserIds: new Set(response.data || []) });
     } catch (error) {
       handleToastErrorMessage(error);
     } finally {
@@ -109,15 +108,17 @@ export const useChatStore = create((set, get) => ({
     socket.on("newMessage", ({ newMessage, conversationId }) => {
       const { currentConversationId } = get();
       // Limits incoming messages to the currently selected user only
-      if (conversationId === currentConversationId) {
+      let isNewMessageFromCurrentConversation =
+        conversationId === currentConversationId;
+      if (isNewMessageFromCurrentConversation) {
         set((state) => ({ messages: [...state.messages, newMessage] }));
       } else {
         // Add sender ID to unreadUserIds for new message notifications
-        set((state) => ({
-          unreadUserIds: state.unreadUserIds.includes(newMessage.senderId)
-            ? state.unreadUserIds
-            : [...state.unreadUserIds, newMessage.senderId],
-        }));
+        set((state) => {
+          const newUnreadUserIds = new Set(state.unreadUserIds);
+          newUnreadUserIds.add(newMessage.senderId);
+          return { unreadUserIds: newUnreadUserIds };
+        });
       }
     });
   },
@@ -143,11 +144,11 @@ export const useChatStore = create((set, get) => ({
       set({ messages: messagesRes.data });
 
       // Remove the unread conversation locally
-      set((state) => ({
-        unreadUserIds: state.unreadUserIds.filter(
-          (id) => id !== newSelectedUser._id
-        ),
-      }));
+      set((state) => {
+        const updatedUnreadUserIds = new Set(state.unreadUserIds);
+        updatedUnreadUserIds.delete(newSelectedUser._id);
+        return { unreadUserIds: updatedUnreadUserIds };
+      });
       // Mark the conversation as read in the backend
       await chatService.markConversationAsRead(conversationId);
     } catch (error) {
