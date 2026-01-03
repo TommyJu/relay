@@ -2,14 +2,16 @@ import { useRef, useState } from "react";
 import { useChatStore } from "../store/chat/useChatStore";
 import { Image, Send, X } from "lucide-react";
 import toast from "react-hot-toast";
-import { MAX_MESSAGE_LENGTH } from "../../../shared/message.constants";
-
+import {
+  MAX_MESSAGE_LENGTH,
+  USER_TYPING_TIMEOUT_IN_MILLISECONDS,
+} from "../../../shared/message.constants";
 
 const MessageInput = () => {
   const [text, setText] = useState("");
   const [imagePreview, setImagePreview] = useState(null);
   const fileInputRef = useRef(null);
-  const { sendMessage } = useChatStore();
+  const { sendMessage, emitTypingEvent, emitStopTypingEvent } = useChatStore();
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -25,6 +27,24 @@ const MessageInput = () => {
     reader.readAsDataURL(file);
   };
 
+  const typingTimeoutRef = useRef(null);
+  
+  const handleTextChange = (e) => {
+    setText(e.target.value);
+
+    // Use a timer to control user typing socket events
+    emitTypingEvent();
+
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+    }
+
+    typingTimeoutRef.current = setTimeout(
+      () => emitStopTypingEvent(),
+      USER_TYPING_TIMEOUT_IN_MILLISECONDS
+    );
+  };
+
   const removeImage = () => {
     setImagePreview(null);
     if (fileInputRef.current) fileInputRef.current.value = "";
@@ -32,6 +52,7 @@ const MessageInput = () => {
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
+
     if (!text.trim() && !imagePreview) return;
 
     try {
@@ -44,6 +65,8 @@ const MessageInput = () => {
       setText("");
       setImagePreview(null);
       if (fileInputRef.current) fileInputRef.current.value = "";
+
+      emitStopTypingEvent();
     } catch (error) {
       console.error("Failed to send message:", error);
     }
@@ -79,7 +102,7 @@ const MessageInput = () => {
             placeholder="Type a message..."
             maxLength={MAX_MESSAGE_LENGTH}
             value={text}
-            onChange={(e) => setText(e.target.value)}
+            onChange={handleTextChange}
           />
           <input
             type="file"
