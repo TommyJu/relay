@@ -1,7 +1,7 @@
 import { chatService } from "../../../services/chatService";
 import { handleToastErrorMessage } from "../../../lib/utils";
 
-export const createUnreadSlice = (set) => ({
+const createUnreadSlice = (set) => ({
   unreadUserIds: new Set(),
 
   getUnreadUserIds: async () => {
@@ -28,3 +28,5 @@ export const createUnreadSlice = (set) => ({
       });
   },
 });
+
+export default createUnreadSlice;

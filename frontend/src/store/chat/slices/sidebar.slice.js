@@ -2,7 +2,7 @@ import { chatService } from "../../../services/chatService";
 import { handleToastErrorMessage } from "../../../lib/utils";
 import toast from "react-hot-toast";
 
-export const createSidebarSlice = (set, get) => ({
+const createSidebarSlice = (set, get) => ({
   pinnedChatUsers: [],
   otherChatUsers: [],
   selectedUser: null,
@@ -99,3 +99,5 @@ export const createSidebarSlice = (set, get) => ({
     }
   },
 });
+
+export default createSidebarSlice;

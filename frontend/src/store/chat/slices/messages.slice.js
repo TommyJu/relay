@@ -3,13 +3,15 @@ import { chatService } from "../../../services/chatService";
 import { handleToastErrorMessage } from "../../../lib/utils";
 
 
-export const createMessagesSlice = (set, get) => ({
+const createMessagesSlice = (set, get) => ({
   messages: [],
   isMessagesLoading: false,
 
   sendMessage: async (messageData) => {
     const { selectedUser, messages } = get();
     try {
+      get().emitStopTypingEvent();
+
       const response = await chatService.sendMessageToUser(
         selectedUser._id,
         messageData
@@ -22,6 +24,7 @@ export const createMessagesSlice = (set, get) => ({
 
   subscribeToMessages: () => {
     const socket = useAuthStore.getState().socket;
+    get().setupSocketForTypingEvents(socket);
     socket.on("newMessage", ({ newMessage }) => {
       // Limits incoming messages to the currently selected user only
       let isNewMessageFromSelectedUser =
@@ -38,5 +41,8 @@ export const createMessagesSlice = (set, get) => ({
   unsubscribeFromMessages: () => {
     const socket = useAuthStore.getState().socket;
     socket.off("newMessage");
+    get().removeSocketFromTypingEvents(socket);
   },
 });
+
+export default createMessagesSlice;
