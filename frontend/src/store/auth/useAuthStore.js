@@ -1,8 +1,8 @@
 import { create } from "zustand";
 import toast from "react-hot-toast";
-import { handleToastErrorMessage } from "../lib/utils";
-import { authService } from "../services/authService"
-import { createSocket } from "../lib/socket"
+import { handleToastErrorMessage } from "../../lib/utils";
+import { authService } from "../../services/authService"
+import { createSocket } from "../../lib/socket"
 
 
 

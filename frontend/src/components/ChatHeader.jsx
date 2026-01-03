@@ -1,5 +1,5 @@
-import { useAuthStore } from "../store/useAuthStore";
-import { useChatStore } from "../store/useChatStore";
+import { useAuthStore } from "../store/auth/useAuthStore";
+import { useChatStore } from "../store/chat/useChatStore";
 import {Pin, PinOff} from "lucide-react";
 
 const ChatHeader = () => {

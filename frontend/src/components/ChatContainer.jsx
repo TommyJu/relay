@@ -1,9 +1,9 @@
-import { useChatStore } from "../store/useChatStore";
+import { useChatStore } from "../store/chat/useChatStore";
 import { useEffect, useRef } from "react";
 
 import ChatHeader from "./ChatHeader";
 import MessageInput from "./MessageInput";
-import { useAuthStore } from "../store/useAuthStore";
+import { useAuthStore } from "../store/auth/useAuthStore";
 import { formatMessageTime } from "../lib/utils";
 import NoMessages from "./NoMessages";
 import { Loader } from "lucide-react";
