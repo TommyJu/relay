@@ -3,7 +3,8 @@ import { useAuthStore } from "../auth/useAuthStore";
 import { chatService } from "../../services/chatService";
 import { handleToastErrorMessage } from "../../lib/utils";
 import toast from "react-hot-toast";
-import { createUnreadSlice } from "./slices/sidebar.slice";
+import { createUnreadSlice } from "./slices/unreadUsers.slice";
+
 
 export const useChatStore = create((set, get) => ({
   ...createUnreadSlice(set, get),
