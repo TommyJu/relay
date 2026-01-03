@@ -1,4 +1,4 @@
-import { useAuthStore } from "../../../auth/useAuthStore";
+import { useAuthStore } from "../../auth/useAuthStore";
 
 const createTypingSlice = (set, get) => ({
   typingUsers: new Set(),
@@ -33,8 +33,8 @@ const createTypingSlice = (set, get) => ({
 
   removeSocketFromTypingEvents: (socket) => {
     socket.off("typing");
-    socket.off("stopTyping")
-  }
+    socket.off("stopTyping");
+  },
 });
 
 export default createTypingSlice;

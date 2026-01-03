@@ -9,16 +9,13 @@ import NoMessages from "./NoMessages";
 import { Loader } from "lucide-react";
 
 const ChatContainer = () => {
-  const {
-    messages,
-    isMessagesLoading,
-    selectedUser,
-  } = useChatStore();
+  const { messages, isMessagesLoading, selectedUser, typingUsers } =
+    useChatStore();
   const { authUser } = useAuthStore();
   const messageEndRef = useRef(null);
 
   useEffect(() => {
-    if (messageEndRef.current && messages) {
+    if (messageEndRef.current) {
       messageEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages]);
@@ -26,7 +23,7 @@ const ChatContainer = () => {
   return (
     <div className="h-full w-full flex flex-col">
       <ChatHeader />
-      {(messages.length === 0 && !isMessagesLoading) ? (
+      {messages.length === 0 && !isMessagesLoading ? (
         <NoMessages />
       ) : (
         <div className="flex-1 p-4 space-y-2 overflow-y-auto">
@@ -36,7 +33,6 @@ const ChatContainer = () => {
               className={`chat min-w-0 ${
                 message.senderId === authUser._id ? "chat-end" : "chat-start"
               }`}
-              ref={messageEndRef}
             >
               <div className=" chat-image avatar">
                 <div className="size-10 rounded-full border">
@@ -67,6 +63,15 @@ const ChatContainer = () => {
               </div>
             </div>
           ))}
+          {/* Typing indicator */}
+          {selectedUser && typingUsers.has(selectedUser._id) && (
+            <div className="chat chat-start">
+              <div className="chat-bubble italic opacity-70">typing...</div>
+            </div>
+          )}
+
+          {/* Dummy div to scroll to bottom */}
+          <div ref={messageEndRef} />
         </div>
       )}
 
