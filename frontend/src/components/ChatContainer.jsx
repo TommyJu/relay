@@ -63,12 +63,6 @@ const ChatContainer = () => {
               </div>
             </div>
           ))}
-          {/* Typing indicator */}
-          {selectedUser && typingUsers.has(selectedUser._id) && (
-            <div className="chat chat-start">
-              <div className="chat-bubble italic opacity-70">typing...</div>
-            </div>
-          )}
 
           {/* Dummy div to scroll to bottom */}
           <div ref={messageEndRef} />
@@ -81,6 +75,8 @@ const ChatContainer = () => {
         </div>
       )}
 
+      {/* Typing indicator */}
+      {selectedUser && typingUsers.has(selectedUser._id) && (<p className="italic mx-4 text-sm">{selectedUser.fullName} is typing...</p>)}
       <MessageInput />
     </div>
   );
