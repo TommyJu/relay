@@ -30,10 +30,17 @@ const SidebarUser = ({
           src={user.profilePic || "/avatar.png"}
           alt={user.fullName}
           className={`
-            size-12 object-cover rounded-full
-            ${isMessageFromSidebarUserUnread ? "border-4 border-accent" : ""}
-          `}
+    size-12 object-cover rounded-full
+    transition-all duration-300
+    ${
+      isMessageFromSidebarUserUnread
+        ? "ring-2 ring-base ring-offset-2 ring-offset-base-100 animate-pulse"
+        : ""
+    }
+  `}
         />
+
+        {/* Online status */}
         {isOnline && (
           <span className="absolute bottom-0 right-0 size-3 bg-green-500 rounded-full ring-2 ring-base-100" />
         )}
