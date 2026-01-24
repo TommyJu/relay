@@ -10,7 +10,8 @@ import {
   findOrCreateChatConversation,
   markConversationAsReadForUser,
   updateConversationStateOnMessageSend,
-  getUnreadUserIdsForUser
+  getUnreadUserIdsForUser,
+  getGifsForSearch
 } from "../services/message.service.js";
 
 export const getUsersForSidebar = async (req, res) => {
@@ -122,3 +123,12 @@ export const getUnreadUserIds = async (req, res) => {
     sendErrorResponse(res, error, "message controller get unread user IDs");
   }
 };
+
+export const searchGifs = async (req, res) => {
+  try {
+    let gifUrls = await getGifsForSearch("eighty-six", 1);
+    res.status(200).json(gifUrls);
+  } catch (error) {
+    sendErrorResponse(res, error, "message controller search GIFs");
+  }
+}

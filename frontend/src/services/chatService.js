@@ -6,12 +6,12 @@ export const chatService = {
   },
 
   fetchMessagesWithUser(receiverId) {
-    return axiosInstance.get(`/messages/chat/${receiverId}`);
+    return axiosInstance.get(`/messages/chat/get-messages/${receiverId}`);
   },
 
 
   sendMessageToUser(receiverId, messageData) {
-    return axiosInstance.post(`/messages/send/${receiverId}`, messageData);
+    return axiosInstance.post(`/messages/chat/send/${receiverId}`, messageData);
   },
 
   pinUser(userToAddId) {

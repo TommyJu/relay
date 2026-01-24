@@ -9,9 +9,8 @@ import mongoose from "mongoose";
 import Conversation from "../models/conversation.model.js";
 
 export const getSidebarUsers = async (loggedInUserId) => {
-  const loggedInUser = await User.findById(loggedInUserId).select(
-    "pinnedUsers"
-  );
+  const loggedInUser =
+    await User.findById(loggedInUserId).select("pinnedUsers");
 
   const pinnedUsers = await User.find({
     _id: { $in: loggedInUser.pinnedUsers },
@@ -23,7 +22,7 @@ export const getSidebarUsers = async (loggedInUserId) => {
     },
   }).select("-password"); // Omit passwords
 
-  return { pinnedUsers, otherUsers};
+  return { pinnedUsers, otherUsers };
 };
 
 export const addToPinnedUsers = async (loggedInUserId, userToAddId) => {
@@ -38,7 +37,7 @@ export const addToPinnedUsers = async (loggedInUserId, userToAddId) => {
   return await User.findByIdAndUpdate(
     loggedInUserId,
     { $addToSet: { pinnedUsers: userToAddId } },
-    { new: true }
+    { new: true },
   );
 };
 
@@ -46,7 +45,7 @@ export const removeFromPinnedUsers = async (loggedInUserId, userToRemoveId) => {
   return await User.findByIdAndUpdate(
     loggedInUserId,
     { $pull: { pinnedUsers: userToRemoveId } },
-    { new: true }
+    { new: true },
   );
 };
 
@@ -69,7 +68,7 @@ export const uploadChatImage = async (image) => {
 export const updateConversationStateOnMessageSend = async (
   conversationId,
   senderId,
-  receiverId
+  receiverId,
 ) => {
   await Conversation.updateOne(
     { _id: conversationId },
@@ -78,7 +77,7 @@ export const updateConversationStateOnMessageSend = async (
         [`read.${senderId}`]: true,
         [`read.${receiverId}`]: false,
       },
-    }
+    },
   );
 };
 
@@ -86,12 +85,12 @@ export const createAndSaveMessage = async (
   senderId,
   receiverId,
   text,
-  imageURL
+  imageURL,
 ) => {
   if (text.length > MAX_MESSAGE_LENGTH) {
     throwError(
       `Message must not exceed ${MAX_MESSAGE_LENGTH} characters.`,
-      400
+      400,
     );
   }
 
@@ -138,7 +137,7 @@ export const findOrCreateChatConversation = async (userId, otherUserId) => {
 export const markConversationAsReadForUser = async (conversationId, userId) => {
   return await Conversation.updateOne(
     { _id: conversationId },
-    { $set: { [`read.${userId}`]: true } }
+    { $set: { [`read.${userId}`]: true } },
   );
 };
 
@@ -147,15 +146,15 @@ export const getUnreadUserIdsForUser = async (currentUserId) => {
     participants: { $in: [currentUserId] },
     $or: [
       { [`read.${currentUserId}`]: false },
-      { [`read.${currentUserId}`]: { $exists: false } }
-    ]
+      { [`read.${currentUserId}`]: { $exists: false } },
+    ],
   }).lean();
 
   const result = [];
 
   conversations.forEach((conversation) => {
     const otherUserId = conversation.participants.find(
-      (id) => id.toString() !== currentUserId.toString()
+      (id) => id.toString() !== currentUserId.toString(),
     );
     if (otherUserId) {
       result.push(otherUserId.toString());
@@ -165,3 +164,27 @@ export const getUnreadUserIdsForUser = async (currentUserId) => {
   return result;
 };
 
+export const getGifsForSearch = async (query, page) => {
+  const myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+
+  const requestOptions = {
+    method: "GET",
+    headers: myHeaders,
+    redirect: "follow",
+  };
+
+  const response = await fetch(
+    `https://api.klipy.com/api/v1/${process.env.KLIPY}/gifs/search?page=${page}&per_page=24&q=${query}&customer_id=${process.env.KLIPY_CUSTOMER_ID}&locale=en-US&content_filter=low`,
+    requestOptions,
+  );
+
+  const gifUrls = [];
+
+  const parsedResponse = await response.json();
+  parsedResponse.data.data.forEach((gif) => {
+    gifUrls.push(gif.file.md.mp4.url);
+  });
+
+  return gifUrls;
+};
