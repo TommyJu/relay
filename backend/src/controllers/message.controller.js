@@ -126,7 +126,8 @@ export const getUnreadUserIds = async (req, res) => {
 
 export const searchGifs = async (req, res) => {
   try {
-    let gifUrls = await getGifsForSearch("eighty-six", 1);
+    const {query, page} = req.params;
+    let gifUrls = await getGifsForSearch(query, page);
     res.status(200).json(gifUrls);
   } catch (error) {
     sendErrorResponse(res, error, "message controller search GIFs");

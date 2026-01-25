@@ -19,7 +19,7 @@ router.get("/users/sidebar", protectRoute, getUsersForSidebar);
 router.put("/users/pin-user/:userToAddId", protectRoute, pinUserToSidebar);
 router.delete("/users/unpin-user/:userToRemoveId", protectRoute, unpinUserFromSidebar);
 
-router.get("/chat/search-gifs", protectRoute, searchGifs);
+router.get("/chat/search-gifs/:query/:page", protectRoute, searchGifs);
 router.get("/chat/get-messages/:receiverId", protectRoute, getMessages);
 router.post("/chat/send/:receiverId", protectRoute, sendMessage);
 
