@@ -1,10 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useChatStore } from "../store/chat/useChatStore";
 import { Loader } from "lucide-react";
 
 const GifModal = () => {
-  const { modalGifUrls, isGifsLoading } = useChatStore();
+  const { modalGifUrls, isGifsLoading, searchForGifs } = useChatStore();
   const [searchTerm, setSearchTerm] = useState("");
+
+  const [debouncedTerm, setDebouncedTerm] = useState(searchTerm);
+
+  useEffect(() => {
+    const handler = setTimeout(() => setDebouncedTerm(searchTerm), 300);
+    return () => clearTimeout(handler);
+  }, [searchTerm]);
+
+  useEffect(() => {
+    if (debouncedTerm) {
+      searchForGifs(debouncedTerm);
+    }
+  }, [debouncedTerm, searchForGifs]);
+
 
   return (
     <dialog id="gif_modal" className="modal">
@@ -23,16 +37,6 @@ const GifModal = () => {
             <button className="btn btn-sm btn-circle btn-ghost">✕</button>
           </form>
         </div>
-
-        {/* No GIFs found message */}
-        {modalGifUrls.length === 0 && !isGifsLoading && "No GIFs Found :("}
-
-        {/* GIFs loading spinner */}
-        {isGifsLoading && (
-          <div className="flex justify-center py-2">
-            <Loader className="size-6 animate-spin opacity-50" />
-          </div>
-        )}
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
           {modalGifUrls.map((gifUrl) => (
             <div
@@ -50,6 +54,15 @@ const GifModal = () => {
             </div>
           ))}
         </div>
+        {/* No GIFs found message */}
+        {modalGifUrls.length === 0 && !isGifsLoading && "No GIFs Found :("}
+
+        {/* GIFs loading spinner */}
+        {isGifsLoading && (
+          <div className="flex justify-center py-2">
+            <Loader className="size-6 animate-spin opacity-50" />
+          </div>
+        )}
       </div>
       <form method="dialog" className="modal-backdrop">
         <button>close</button>

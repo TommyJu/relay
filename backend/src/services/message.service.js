@@ -164,7 +164,7 @@ export const getUnreadUserIdsForUser = async (currentUserId) => {
   return result;
 };
 
-export const getGifsForSearch = async (query, page) => {
+export const getGifsForSearch = async (query) => {
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
 
@@ -175,7 +175,7 @@ export const getGifsForSearch = async (query, page) => {
   };
 
   const response = await fetch(
-    `https://api.klipy.com/api/v1/${process.env.KLIPY}/gifs/search?page=${page}&per_page=24&q=${query}&customer_id=${process.env.KLIPY_CUSTOMER_ID}&locale=en-US&content_filter=low`,
+    `https://api.klipy.com/api/v1/${process.env.KLIPY}/gifs/search?page=1&per_page=24&q=${query}&customer_id=${process.env.KLIPY_CUSTOMER_ID}&locale=en-US&content_filter=low`,
     requestOptions,
   );
 

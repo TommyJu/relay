@@ -33,4 +33,7 @@ export const chatService = {
   getUnreadUserIds() {
     return axiosInstance.get("/messages/conversation/get-unread");
   },
+  searchForGifs(query) {
+    return axiosInstance.get(`/messages/chat/search-gifs/${query}`)
+  }
 };
