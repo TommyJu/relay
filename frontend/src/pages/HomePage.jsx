@@ -3,7 +3,7 @@ import Sidebar from "../components/Sidebar";
 import NoChatSelected from "../components/NoChatSelected";
 import ChatContainer from "../components/ChatContainer";
 import { useEffect } from "react";
-
+import GifModal from "../components/GifModal";
 
 
 const HomePage = () => {
@@ -28,6 +28,9 @@ const HomePage = () => {
 
       {/* Overlay sidebar */}
       <Sidebar/>
+
+      {/* GIF Modal */}
+      <GifModal/>
     </div>
   );
 };

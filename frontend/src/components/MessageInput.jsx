@@ -6,6 +6,7 @@ import {
   MAX_MESSAGE_LENGTH,
   USER_TYPING_TIMEOUT_IN_MILLISECONDS,
 } from "../../../shared/message.constants";
+import GifModalButton from "./GifModalButton";
 
 const MessageInput = () => {
   const [text, setText] = useState("");
@@ -120,6 +121,7 @@ const MessageInput = () => {
           >
             <Image size={20} />
           </button>
+          <GifModalButton/>
         </div>
         <button
           type="submit"
