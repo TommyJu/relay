@@ -1,19 +1,28 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import { useChatStore } from "../store/chat/useChatStore";
 import { Loader } from "lucide-react";
 
 const GifModal = () => {
   const { modalGifUrls, isGifsLoading } = useChatStore();
+  const [searchTerm, setSearchTerm] = useState("");
 
   return (
     <dialog id="gif_modal" className="modal">
-      <div className="modal-box">
-        <form method="dialog">
-          {/* if there is a button in form, it will close the modal */}
-          <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
-            ✕
-          </button>
-        </form>
+      <div className="modal-box py-12 max-w-full pt-0 h-[96%]">
+        <div className="sticky top-0 bg-base-100 z-10 w-full flex items-center gap-4">
+          {/* Search input */}
+          <input
+            type="text"
+            placeholder="Search GIFs..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="input input-sm w-full my-4"
+          />
+          <form method="dialog">
+            {/* if there is a button in form, it will close the modal */}
+            <button className="btn btn-sm btn-circle btn-ghost">✕</button>
+          </form>
+        </div>
 
         {/* No GIFs found message */}
         {modalGifUrls.length === 0 && !isGifsLoading && "No GIFs Found :("}
@@ -24,20 +33,27 @@ const GifModal = () => {
             <Loader className="size-6 animate-spin opacity-50" />
           </div>
         )}
-
-        {modalGifUrls.map((gifUrl) => (
-          <div key={gifUrl} className="p-2">
-            <video
-              src={gifUrl}
-              autoPlay
-              loop
-              muted
-              playsInline
-              className="w-full rounded-md"
-            />
-          </div>
-        ))}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+          {modalGifUrls.map((gifUrl) => (
+            <div
+              key={gifUrl}
+              className="aspect-square overflow-hidden rounded-md hover:opacity-70"
+            >
+              <video
+                src={gifUrl}
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="w-full h-full object-cover"
+              />
+            </div>
+          ))}
+        </div>
       </div>
+      <form method="dialog" className="modal-backdrop">
+        <button>close</button>
+      </form>
     </dialog>
   );
 };
