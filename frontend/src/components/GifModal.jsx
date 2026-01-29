@@ -3,13 +3,14 @@ import { useChatStore } from "../store/chat/useChatStore";
 import { Loader } from "lucide-react";
 
 const GifModal = () => {
-  const { modalGifUrls, isGifsLoading, searchForGifs } = useChatStore();
+  const { modalGifUrls, isGifsLoading, searchForGifs, getTrendingGifs } = useChatStore();
   const [searchTerm, setSearchTerm] = useState("");
 
+  // Automatic GIF search request after search bar input 
   const [debouncedTerm, setDebouncedTerm] = useState(searchTerm);
 
   useEffect(() => {
-    const handler = setTimeout(() => setDebouncedTerm(searchTerm), 300);
+    const handler = setTimeout(() => setDebouncedTerm(searchTerm), 500);
     return () => clearTimeout(handler);
   }, [searchTerm]);
 
@@ -19,6 +20,13 @@ const GifModal = () => {
     }
   }, [debouncedTerm, searchForGifs]);
 
+  // Populate GIF modal with trending GIFs if no search terms present
+  useEffect(() => {
+    let isSearchTermEmpty = searchTerm.trim() === "";
+    if (isSearchTermEmpty) {
+      getTrendingGifs();
+    }
+  }, [searchTerm, getTrendingGifs]);
 
   return (
     <dialog id="gif_modal" className="modal">

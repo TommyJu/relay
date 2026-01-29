@@ -9,7 +9,8 @@ import {
   getConversation,
   markConversationAsRead,
   getUnreadUserIds,
-  searchGifs
+  searchGifs,
+  getTrendingGifs
 } from "../controllers/message.controller.js";
 
 
@@ -20,6 +21,7 @@ router.put("/users/pin-user/:userToAddId", protectRoute, pinUserToSidebar);
 router.delete("/users/unpin-user/:userToRemoveId", protectRoute, unpinUserFromSidebar);
 
 router.get("/chat/search-gifs/:query", protectRoute, searchGifs);
+router.get("/chat/trending-gifs", protectRoute, getTrendingGifs);
 router.get("/chat/get-messages/:receiverId", protectRoute, getMessages);
 router.post("/chat/send/:receiverId", protectRoute, sendMessage);
 

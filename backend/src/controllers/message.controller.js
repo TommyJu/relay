@@ -11,7 +11,8 @@ import {
   markConversationAsReadForUser,
   updateConversationStateOnMessageSend,
   getUnreadUserIdsForUser,
-  getGifsForSearch
+  getGifsForSearch,
+  getTrendingGifUrls
 } from "../services/message.service.js";
 
 export const getUsersForSidebar = async (req, res) => {
@@ -128,6 +129,15 @@ export const searchGifs = async (req, res) => {
   try {
     const {query} = req.params;
     let gifUrls = await getGifsForSearch(query);
+    res.status(200).json(gifUrls);
+  } catch (error) {
+    sendErrorResponse(res, error, "message controller search GIFs");
+  }
+}
+
+export const getTrendingGifs = async (req, res) => {
+  try {
+    let gifUrls = await getTrendingGifUrls();
     res.status(200).json(gifUrls);
   } catch (error) {
     sendErrorResponse(res, error, "message controller search GIFs");

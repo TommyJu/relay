@@ -179,12 +179,39 @@ export const getGifsForSearch = async (query) => {
     requestOptions,
   );
 
+  return await parseResponseForGifs(response);
+};
+
+export const getTrendingGifUrls = async () => {
+    const myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+
+  const requestOptions = {
+    method: "GET",
+    headers: myHeaders,
+    redirect: "follow",
+  };
+
+  const response = await fetch(
+    `https://api.klipy.com/api/v1/${process.env.KLIPY}/gifs/trending?page=1&per_page=24&customer_id=${process.env.KLIPY_CUSTOMER_ID}&locale=en-US&content_filter=low`,
+    requestOptions,
+  );
+  
+  return await parseResponseForGifs(response);
+}
+
+const parseResponseForGifs = async (response) => {
   const gifUrls = [];
 
   const parsedResponse = await response.json();
+
+  if (!parsedResponse.result) {
+    throwError("No results from the GIF API", 404);
+  }
+
   parsedResponse.data.data.forEach((gif) => {
     gifUrls.push(gif.file.md.mp4.url);
   });
 
   return gifUrls;
-};
+}

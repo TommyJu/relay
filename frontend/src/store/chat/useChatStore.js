@@ -10,5 +10,5 @@ export const useChatStore = create((set, get) => ({
   ...createSidebarSlice(set, get),
   ...createMessagesSlice(set, get),
   ...createTypingSlice(set, get),
-  ...createGifsSlice(set, get)
+  ...createGifsSlice(set)
 }));

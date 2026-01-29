@@ -1,18 +1,35 @@
 import { handleToastErrorMessage } from "../../../lib/utils";
 import { chatService } from "../../../services/chatService";
 
-const createGifsSlice = (set, get) => ({
-    isGifsLoading: false,
-    modalGifUrls: [],
-    modalPage: 1,
-    searchForGifs: async (query) => {
-        set({isGifsLoading: true});
-        const response = await chatService.searchForGifs(query);
-        const newGifUrls = response.data;
-        set({modalGifUrls: newGifUrls});
-        set({isGifsLoading: false});
-    },
+const createGifsSlice = (set) => ({
+  isGifsLoading: false,
+  modalGifUrls: [],
 
+  searchForGifs: async (query) => {
+    try {
+      set({ isGifsLoading: true });
+      const response = await chatService.searchForGifs(query);
+      const newGifUrls = response.data;
+      set({ modalGifUrls: newGifUrls });
+    } catch (error) {
+      handleToastErrorMessage(error);
+    } finally {
+      set({ isGifsLoading: false });
+    }
+  },
+
+  getTrendingGifs: async () => {
+    try {
+      set({ isGifsLoading: true });
+      const response = await chatService.getTrendingGifs();
+      const newGifUrls = response.data;
+      set({ modalGifUrls: newGifUrls });
+    } catch (error) {
+      handleToastErrorMessage(error);
+    } finally {
+      set({ isGifsLoading: false });
+    }
+  },
 
 });
 

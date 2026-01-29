@@ -35,5 +35,8 @@ export const chatService = {
   },
   searchForGifs(query) {
     return axiosInstance.get(`/messages/chat/search-gifs/${query}`)
+  },
+  getTrendingGifs() {
+    return axiosInstance.get("/messages/chat/trending-gifs");
   }
 };
