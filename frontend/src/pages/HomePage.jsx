@@ -7,7 +7,7 @@ import GifModal from "../components/GifModal";
 
 
 const HomePage = () => {
-  const { selectedUser } = useChatStore();
+  const { selectedUser, isGifModalOpen } = useChatStore();
 
       const {
         subscribeToMessages,
@@ -30,7 +30,7 @@ const HomePage = () => {
       <Sidebar/>
 
       {/* GIF Modal */}
-      <GifModal/>
+      {isGifModalOpen && <GifModal />}
     </div>
   );
 };

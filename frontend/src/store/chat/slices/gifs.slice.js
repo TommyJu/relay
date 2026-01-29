@@ -4,6 +4,10 @@ import { chatService } from "../../../services/chatService";
 const createGifsSlice = (set) => ({
   isGifsLoading: false,
   modalGifUrls: [],
+  isGifModalOpen: false,
+
+  openGifModal: () => set({ isGifModalOpen: true }),
+  closeGifModal: () => set({ isGifModalOpen: false }),
 
   searchForGifs: async (query) => {
     try {
