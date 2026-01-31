@@ -56,22 +56,34 @@ const GifModal = () => {
   return (
     <div id="gif_modal" className="modal modal-open">
       <div className="modal-box py-12 max-w-full pt-0 h-[96%]">
-        <div className="sticky top-0 bg-base-100 z-10 w-full flex items-center gap-4">
+        <div className="sticky top-0 bg-base-100 z-10 w-full">
           {/* Search input */}
-          <input
-            type="text"
-            placeholder="Search GIFs..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="input input-sm w-full my-4"
-          />
+          <div className="flex flex-nowrap justify-between w-full items-center gap-2">
+            <input
+              type="text"
+              placeholder="Search KLIPY"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="input input-sm w-full my-4"
+            />
 
-          <button
-            className="btn btn-sm btn-circle btn-ghost"
-            onClick={closeGifModal}
-          >
-            ✕
-          </button>
+            <button
+              className="btn btn-sm btn-circle btn-ghost"
+              onClick={closeGifModal}
+            >
+              ✕
+            </button>
+          </div>
+
+          <div className="bg-black rounded p-1 w-full">
+            <a href="https://klipy.com/en-US" target="_blank" rel="noopener noreferrer" aria-label="Visit KLIPY website">
+              <img
+                src="powered_by_klipy.png"
+                alt="Powered by KLIPY"
+                className="max-h-6 m-auto"
+              />
+            </a>
+          </div>
         </div>
         {/* Render GIF results */}
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">

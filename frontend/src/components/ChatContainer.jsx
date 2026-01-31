@@ -61,7 +61,8 @@ const ChatContainer = () => {
                 )}
                 {message.text && <p>{message.text}</p>}
                 {message.gif && (
-                  <video
+                  <div>
+                    <video
                     src={message.gif}
                     autoPlay
                     loop
@@ -69,6 +70,9 @@ const ChatContainer = () => {
                     playsInline
                     className="rounded-md mb-2 w-full max-w-[90vw] sm:max-w-[200px]"
                   />
+                  <img src="klipy_watermark.png" alt="KLIPY" className="h-3"/>
+                  </div>
+                  
                 )}
               </div>
             </div>
