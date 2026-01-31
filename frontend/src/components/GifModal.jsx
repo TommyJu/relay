@@ -9,6 +9,7 @@ const GifModal = () => {
     searchForGifs,
     getTrendingGifs,
     closeGifModal,
+    sendMessage,
   } = useChatStore();
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -34,6 +35,29 @@ const GifModal = () => {
     }
   }, [searchTerm, getTrendingGifs]);
 
+  const handleGifSelection = async (gifUrl) => {
+    console.log("gif clicked!")
+    console.log("gif url before setting: " + gifUrl)
+    await handleSendMessage(gifUrl);
+  };
+
+  const handleSendMessage = async (gifUrl) => {
+    console.log("handle send message with gif: " + gifUrl);
+
+    try {
+      await sendMessage({
+        text: "",
+        image: null,
+        gif: gifUrl
+      });
+
+    } catch (error) {
+      console.error("Failed to send GIF:", error);
+    } finally {
+      console.log("Gif completed sending!")
+    }
+  };
+
   return (
     <div id="gif_modal" className="modal modal-open">
       <div className="modal-box py-12 max-w-full pt-0 h-[96%]">
@@ -57,9 +81,10 @@ const GifModal = () => {
         {/* Render GIF results */}
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
           {modalGifUrls.map((gifUrl) => (
-            <div
+            <button
               key={gifUrl}
               className="aspect-square overflow-hidden rounded-md hover:opacity-70"
+              onClick={() => {handleGifSelection(gifUrl)}}
             >
               <video
                 src={gifUrl}
@@ -69,7 +94,7 @@ const GifModal = () => {
                 playsInline
                 className="w-full h-full object-cover"
               />
-            </div>
+            </button>
           ))}
         </div>
         {/* No GIFs found message */}

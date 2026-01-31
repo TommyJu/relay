@@ -11,8 +11,13 @@ import GifModalButton from "./GifModalButton";
 const MessageInput = () => {
   const [text, setText] = useState("");
   const [imagePreview, setImagePreview] = useState(null);
+
   const fileInputRef = useRef(null);
-  const { sendMessage, emitTypingEvent, emitStopTypingEvent } = useChatStore();
+  const {
+    sendMessage,
+    emitTypingEvent,
+    emitStopTypingEvent,
+  } = useChatStore();
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -29,7 +34,7 @@ const MessageInput = () => {
   };
 
   const typingTimeoutRef = useRef(null);
-  
+
   const handleTextChange = (e) => {
     setText(e.target.value);
 
@@ -42,7 +47,7 @@ const MessageInput = () => {
 
     typingTimeoutRef.current = setTimeout(
       () => emitStopTypingEvent(),
-      USER_TYPING_TIMEOUT_IN_MILLISECONDS
+      USER_TYPING_TIMEOUT_IN_MILLISECONDS,
     );
   };
 
@@ -60,16 +65,18 @@ const MessageInput = () => {
       await sendMessage({
         text: text.trim(),
         image: imagePreview,
+        gif: ""
       });
 
+    } catch (error) {
+      console.error("Failed to send message:", error);
+    } finally {
       // Clear form
       setText("");
       setImagePreview(null);
       if (fileInputRef.current) fileInputRef.current.value = "";
-
+      
       emitStopTypingEvent();
-    } catch (error) {
-      console.error("Failed to send message:", error);
     }
   };
 
@@ -121,7 +128,7 @@ const MessageInput = () => {
           >
             <Image size={20} />
           </button>
-          <GifModalButton/>
+          <GifModalButton />
         </div>
         <button
           type="submit"

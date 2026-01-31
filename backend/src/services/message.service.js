@@ -86,6 +86,7 @@ export const createAndSaveMessage = async (
   receiverId,
   text,
   imageURL,
+  gif
 ) => {
   if (text.length > MAX_MESSAGE_LENGTH) {
     throwError(
@@ -99,6 +100,7 @@ export const createAndSaveMessage = async (
     receiverId,
     text,
     image: imageURL,
+    gif
   });
 
   await newMessage.save();

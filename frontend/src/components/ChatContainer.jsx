@@ -60,6 +60,16 @@ const ChatContainer = () => {
                   />
                 )}
                 {message.text && <p>{message.text}</p>}
+                {message.gif && (
+                  <video
+                    src={message.gif}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="rounded-md mb-2 w-full max-w-[90vw] sm:max-w-[200px]"
+                  />
+                )}
               </div>
             </div>
           ))}
@@ -76,7 +86,11 @@ const ChatContainer = () => {
       )}
 
       {/* Typing indicator */}
-      {selectedUser && typingUsers.has(selectedUser._id) && (<p className="italic mx-4 text-sm">{selectedUser.fullName} is typing...</p>)}
+      {selectedUser && typingUsers.has(selectedUser._id) && (
+        <p className="italic mx-4 text-sm">
+          {selectedUser.fullName} is typing...
+        </p>
+      )}
       <MessageInput />
     </div>
   );

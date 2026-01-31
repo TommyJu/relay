@@ -67,7 +67,7 @@ export const getMessages = async (req, res) => {
 
 export const sendMessage = async (req, res) => {
   try {
-    const { text, image } = req.body;
+    const { text, image, gif } = req.body;
     const { receiverId } = req.params;
     const senderId = req.user._id;
 
@@ -78,7 +78,8 @@ export const sendMessage = async (req, res) => {
       senderId,
       receiverId,
       text,
-      imageURL
+      imageURL,
+      gif
     );
 
     // Update conversation meta data for new message notifications for the recipient
