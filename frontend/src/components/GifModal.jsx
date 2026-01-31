@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useChatStore } from "../store/chat/useChatStore";
 import { Loader } from "lucide-react";
+import toast from "react-hot-toast";
 
 const GifModal = () => {
   const {
@@ -36,25 +37,19 @@ const GifModal = () => {
   }, [searchTerm, getTrendingGifs]);
 
   const handleGifSelection = async (gifUrl) => {
-    console.log("gif clicked!")
-    console.log("gif url before setting: " + gifUrl)
     await handleSendMessage(gifUrl);
+    toast.success("GIF sent successfully");
   };
 
   const handleSendMessage = async (gifUrl) => {
-    console.log("handle send message with gif: " + gifUrl);
-
     try {
       await sendMessage({
         text: "",
         image: null,
-        gif: gifUrl
+        gif: gifUrl,
       });
-
     } catch (error) {
       console.error("Failed to send GIF:", error);
-    } finally {
-      console.log("Gif completed sending!")
     }
   };
 
@@ -84,7 +79,9 @@ const GifModal = () => {
             <button
               key={gifUrl}
               className="aspect-square overflow-hidden rounded-md hover:opacity-70"
-              onClick={() => {handleGifSelection(gifUrl)}}
+              onClick={() => {
+                handleGifSelection(gifUrl);
+              }}
             >
               <video
                 src={gifUrl}
