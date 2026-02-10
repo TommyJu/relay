@@ -120,6 +120,7 @@ The project requires the following environment variables:
 ![Screenshot](/readme-assets/sample3.png)
 ![Screenshot](/readme-assets/sample4.png)
 ![Screenshot](/readme-assets/sample5.png)
+![Screenshot](/readme-assets/sample6.png)
 
 ## Project Structure
 ```
