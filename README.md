@@ -15,7 +15,7 @@ Relay is a real-time messaging application built using the **MERN stack** and **
 - RESTful APIs with Express
 - MongoDB with Mongoose for data modeling and querying
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 ### Frontend
 - React
@@ -34,7 +34,7 @@ Relay is a real-time messaging application built using the **MERN stack** and **
 - JSON Web Tokens (JWT)
 - Cloudinary
 
-## 🧠 Architecture Overview
+## Architecture Overview
 Relay is deployed on Microsoft Azure.
 The backend server hosts both the API and the production frontend build, serving static assets and handling WebSocket connections.
 
@@ -112,6 +112,14 @@ The project requires the following environment variables:
 1. Navigate to the "/backend" directory in your terminal and run the command "npm run dev"
 2. Navigate to the "/frontend" directory in a separate terminal window and run the command "npm run dev"
 3. In the terminal window that is running the frontend, you should see a local host link such as: "http://localhost:5173/". Open the local host link in your browser
+
+
+## Showcase
+![Screenshot](/readme-assets/sample1.png)
+![Screenshot](/readme-assets/sample2.png)
+![Screenshot](/readme-assets/sample3.png)
+![Screenshot](/readme-assets/sample4.png)
+![Screenshot](/readme-assets/sample5.png)
 
 ## Project Structure
 ```
